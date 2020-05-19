@@ -2,8 +2,8 @@ import path from 'path';
 import send from 'koa-send';
 import upload from '../libs/multer';
 import { DEST_PATH } from '../libs/multer';
-
 import { getAdmins, getAdmin, checkPassword } from '../../helpers/admins';
+import config from '../config';
 
 const STATIC_PATH = path.join(__dirname, '..', '..', '..', 'admin-panel', 'build');
 
@@ -51,21 +51,27 @@ const handlers = {
 
 			const files = data.files;
 
-			console.dir(files);
-
-			/*const filename =
+			const filename =
 				files && files.image && files.image[0] && files.image[0].filename ? files.image[0].filename : null;
 			const imageUrl = filename
-				? encodeURI(`https://${config.host}:${config.httpsPort}/api/gsend/file?filename=${filename}`)
+				? encodeURI(`https://${config.host}:${config.httpsPort}/api/file?filename=${filename}`)
 				: null;
 
-			const { text } = ctx.request.body;
-
-			const phoneNumbers = ctx.request.body.phoneNumbers ? JSON.parse(ctx.request.body.phoneNumbers).numbers : null;
-
-			if (!imageUrl && !text) {
+			if (!imageUrl) {
 				return (ctx.status = 400);
-			}*/
+			}
+
+			ctx.status = 200;
+			ctx.body = {
+				imageUrl
+			};
+		},
+		file: async (ctx) => {
+			const { filename } = ctx.query;
+			if (!filename) {
+				return (ctx.status = 400);
+			}
+			await send(ctx, filename, { root: DEST_PATH });
 		}
 	}
 };

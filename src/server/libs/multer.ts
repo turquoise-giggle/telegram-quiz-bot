@@ -23,11 +23,12 @@ const upload = koaMulter({
 		callback(err, true);
 	},
 	limits: {
+		files: 1,
 		fileSize: 1024 * 1024 * 5 // 5MB
 	}
 }).fields([
 	{
-		name: 'images'
+		name: 'image'
 	}
 ]);
 
