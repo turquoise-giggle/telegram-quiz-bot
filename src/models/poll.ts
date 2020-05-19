@@ -4,7 +4,7 @@ import PollStatusType from '../enums/PollStatusType';
 export interface IPoll extends Document {
 	status: PollStatusType;
 	answerTime: number;
-	image: Buffer;
+	image: string;
 	answers: [
 		{
 			text: string;
@@ -22,7 +22,7 @@ export const PollSchema: Schema = new Schema({
 		default: () => PollStatusType.WAITING
 	},
 	answerTime: { type: Number, required: true },
-	image: { type: Buffer, required: true },
+	image: { type: String, required: true },
 	answers: [
 		{
 			text: { type: String, required: true },

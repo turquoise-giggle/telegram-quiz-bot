@@ -8,7 +8,7 @@ export interface IQuiz extends Document {
 	answerTime: number;
 	questions: [
 		{
-			image: Buffer;
+			image: string;
 			answers: [
 				{
 					text: string;
@@ -32,7 +32,7 @@ export const QuizSchema: Schema = new Schema({
 	questions: {
 		type: [
 			{
-				image: { type: Buffer, required: true },
+				image: { type: String, required: true },
 				answers: [
 					{
 						text: { type: String, required: true },
