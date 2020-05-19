@@ -1,10 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import QuizStatusType from '../enums/QuizStatusType';
 
-export interface IQuiz extends Document {
+export interface IQuiz {
 	name: string;
 	prize: string;
-	status: QuizStatusType;
+	status?: QuizStatusType;
 	answerTime: number;
 	questions: [
 		{
@@ -18,6 +18,8 @@ export interface IQuiz extends Document {
 		}
 	];
 }
+
+export interface IMongooseQuiz extends IQuiz, Document {}
 
 // Схема пользователя
 export const QuizSchema: Schema = new Schema({
@@ -44,6 +46,6 @@ export const QuizSchema: Schema = new Schema({
 	}
 });
 
-const QuizModel = mongoose.model<IQuiz>('Quiz', QuizSchema);
+const QuizModel = mongoose.model<IMongooseQuiz>('Quiz', QuizSchema);
 
 export default QuizModel;

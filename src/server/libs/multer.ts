@@ -1,7 +1,7 @@
 import path from 'path';
 import koaMulter from '@koa/multer';
 
-export const DEST_PATH = path.join(__dirname, '../../../assets/gsend');
+export const DEST_PATH = path.join(__dirname, '../../../assets');
 
 const upload = koaMulter({
 	storage: koaMulter.diskStorage({
@@ -23,22 +23,12 @@ const upload = koaMulter({
 		callback(err, true);
 	},
 	limits: {
-		fields: 2,
 		files: 1,
 		fileSize: 1024 * 1024 * 5 // 5MB
 	}
 }).fields([
 	{
-		name: 'image',
-		maxCount: 1
-	},
-	{
-		name: 'text',
-		maxCount: 1
-	},
-	{
-		name: 'phoneNumbers',
-		maxCount: 1
+		name: 'image'
 	}
 ]);
 

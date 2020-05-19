@@ -3,7 +3,7 @@ import QuizStatusType from '../enums/QuizStatusType';
 
 export async function addQuiz(quizData: IQuiz) {
 	const quiz = new Quiz(quizData);
-	await quiz.save();
+	return quiz.save();
 }
 
 export async function getQuizes(filter = {}) {
