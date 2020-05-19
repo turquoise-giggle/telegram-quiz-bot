@@ -28,8 +28,8 @@ export const getAdmins = async (): Promise<IUser[]> => User.find({ isAdmin: true
  * @returns { Promise<Boolean> }
  */
 export const isAdmin = async (chatId: number): Promise<Boolean> => {
-    let res = await User.find({ chatId: chatId, isAdmin: true });
-    return res.length > 0;
+	let res = await User.find({ chatId: chatId, isAdmin: true });
+	return res.length > 0;
 };
 
 /**
@@ -41,18 +41,17 @@ export const isAdmin = async (chatId: number): Promise<Boolean> => {
  * @returns { Promise<void> }
  */
 export const sendGlobal = async (ctx, filters = {}) => {
-    const users = await User.find(filters);
-    
-    for (const user of users) {
-        if (user.chatId !== ctx.from.id) {
-            try {
-                await ctx.telegram.sendCopy(user.chatId, ctx.message);
-            }
-            catch (err) {
-                console.error(`Не удалось выполнить рассылку пользователю: ${err.message}`);
-            }
-        }
-    }
+	const users = await User.find(filters);
+
+	for (const user of users) {
+		if (user.chatId !== ctx.from.id) {
+			try {
+				await ctx.telegram.sendCopy(user.chatId, ctx.message);
+			} catch (err) {
+				console.error(`Не удалось выполнить рассылку пользователю: ${err.message}`);
+			}
+		}
+	}
 };
 
 /**
@@ -63,22 +62,20 @@ export const sendGlobal = async (ctx, filters = {}) => {
  * @returns { Promise<void> }
  */
 export const addAdmin = async (chatId: number) => {
-    try {
-        const user = await User.findOne({ chatId: chatId });
-        user.isAdmin = true; // делаем юзера админом
-        
-        // Сохраняем его
-        try {
-            await user.save();
-            console.log('Добавлен новый админ!');
-        }
-        catch (e) {
-            throw e;
-        }
-    }
-    catch (err) {
-        throw new Error(`Ошибка при добавлении админа: ${err.message}`);
-    }
+	try {
+		const user = await User.findOne({ chatId: chatId });
+		user.isAdmin = true; // делаем юзера админом
+
+		// Сохраняем его
+		try {
+			await user.save();
+			console.log('Добавлен новый админ!');
+		} catch (e) {
+			throw e;
+		}
+	} catch (err) {
+		throw new Error(`Ошибка при добавлении админа: ${err.message}`);
+	}
 };
 
 /**
@@ -89,13 +86,12 @@ export const addAdmin = async (chatId: number) => {
  * @returns { Promise<void> }
  */
 export const dismissAdmin = async (chatId: number) => {
-    try {
-        await User.updateOne({ chatId: chatId }, { isAdmin: false });
-        console.log('Админ успешно отстранён!');
-    }
-    catch (err) {
-        throw new Error(`Ошибка при отстранении админа: ${err.message}`);
-    }
+	try {
+		await User.updateOne({ chatId: chatId }, { isAdmin: false });
+		console.log('Админ успешно отстранён!');
+	} catch (err) {
+		throw new Error(`Ошибка при отстранении админа: ${err.message}`);
+	}
 };
 
 /**
@@ -107,19 +103,18 @@ export const dismissAdmin = async (chatId: number) => {
  * @param fileList
  */
 export const getFilesRecursively = async (dir, fileList = null): Promise<string[]> => {
-    const files = await promisify(fs.readdir)(dir);
-    
-    fileList = fileList || [];
-    for (const file of files) {
-        if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            fileList = await getFilesRecursively(dir + file + '/', fileList);
-        }
-        else {
-            fileList.push(dir + file);
-        }
-    }
-    
-    return fileList;
+	const files = await promisify(fs.readdir)(dir);
+
+	fileList = fileList || [];
+	for (const file of files) {
+		if (fs.statSync(path.join(dir, file)).isDirectory()) {
+			fileList = await getFilesRecursively(dir + file + '/', fileList);
+		} else {
+			fileList.push(dir + file);
+		}
+	}
+
+	return fileList;
 };
 
 /**
@@ -131,8 +126,8 @@ export const getFilesRecursively = async (dir, fileList = null): Promise<string[
  * @returns { Promise<void> }
  */
 export const imitateTyping = async (ctx: ContextMessageUpdate, seconds = 1) => {
-    return new Promise((resolve) => {
-        ctx.replyWithChatAction('typing');
-        setTimeout(resolve, seconds * 1000);
-    });
+	return new Promise((resolve) => {
+		ctx.replyWithChatAction('typing');
+		setTimeout(resolve, seconds * 1000);
+	});
 };
