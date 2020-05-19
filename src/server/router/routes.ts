@@ -1,4 +1,6 @@
 import adminPanelHandlers from '../handlers/adminPanel';
+import pollsHandlers from '../handlers/polls';
+import quizesHandlers from '../handlers/quizes';
 
 const Routes = {
 	isInit: false,
@@ -22,11 +24,24 @@ const Routes = {
 			ctx.status = 200;
 			ctx.body = { ok: true };
 		});
+
+		/*** Polls ***/
+		router.get('/api/poll/read', this.getAuthCheckedHandler(pollsHandlers.read));
+		router.post('/api/poll/create', this.getAuthCheckedHandler(pollsHandlers.create));
+		router.post('/api/poll/update', this.getAuthCheckedHandler(pollsHandlers.update));
+		router.post('/api/poll/delete', this.getAuthCheckedHandler(pollsHandlers.delete));
+
+		/*** Quizes ***/
+		router.get('/api/quiz/read', this.getAuthCheckedHandler(quizesHandlers.read));
+		router.post('/api/quiz/create', this.getAuthCheckedHandler(quizesHandlers.create));
+		router.post('/api/quiz/update', this.getAuthCheckedHandler(quizesHandlers.update));
+		router.post('/api/quiz/delete', this.getAuthCheckedHandler(quizesHandlers.delete));
 		
 		/*** Admin panel ***/
 		router.get('/api/auth/check', adminPanelHandlers.auth.check);
 		router.post('/api/auth/login', adminPanelHandlers.auth.login);
 		router.get('/api/auth/logout', adminPanelHandlers.auth.logout);
+		router.post('/api/auth/upload', adminPanelHandlers.panel.upload);
 		router.get('*', adminPanelHandlers.panel.main);
 	}
 };

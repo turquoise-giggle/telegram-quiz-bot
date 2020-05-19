@@ -6,3 +6,5 @@ logfile.log
 node_modules/
 TODO
 .DS_Store
+assets/*
+!.gitkeep

@@ -1,8 +1,8 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import PollStatusType from '../enums/PollStatusType';
 
-export interface IPoll extends Document {
-	status: PollStatusType;
+export interface IPoll {
+	status?: PollStatusType;
 	answerTime: number;
 	image: string;
 	answers: [
@@ -11,8 +11,10 @@ export interface IPoll extends Document {
 			isValid?: boolean;
 		}
 	];
-	priority: number;
+	priority?: number;
 }
+
+export interface IMongoosePoll extends IPoll, Document {}
 
 // Схема пользователя
 export const PollSchema: Schema = new Schema({
@@ -32,6 +34,6 @@ export const PollSchema: Schema = new Schema({
 	priority: { type: Number, required: true }
 });
 
-const PollModel = mongoose.model<IPoll>('Poll', PollSchema);
+const PollModel = mongoose.model<IMongoosePoll>('Poll', PollSchema);
 
 export default PollModel;
