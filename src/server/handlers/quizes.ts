@@ -106,7 +106,7 @@ const handlers = {
 		}
 	},
 	post: async (ctx) => {
-		const { id } = ctx.request.body;
+		const { id } = ctx.query;
 
 		if (!id) {
 			return (ctx.status = 400);

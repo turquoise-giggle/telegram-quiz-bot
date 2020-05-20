@@ -1,11 +1,11 @@
 import Bot from '../';
 import Channel from '../models/channel';
-import { IQuiz } from '../../models/quiz';
 import QuizStatusType from '../../enums/QuizStatusType';
 import AnswerType from '../../enums/AnswerType';
 import { getAnswersKeyboard } from './keyboards';
 import { getQuizIntroMessage } from './messages';
 import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
+import { getPollById, updatePollStatus } from '../../helpers/polls';
 
 const Markup = require('telegraf/markup');
 
@@ -62,7 +62,7 @@ export async function postQuiz(quizId: string) {
 
 export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId) {
 	const question = questions.shift();
-	await postQuizQuestion(bot, channel, question);
+	await postQuestion(bot, channel, question, answerTimeMilis, AnswerType.QUIZ_ANSWER);
 	if (questions.length) {
 		setTimeout(
 			postNextQuizQuestion,
@@ -78,7 +78,7 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 	}
 }
 
-export async function postQuizQuestion(bot, channel, question) {
+export async function postQuestion(bot, channel, question, answerTimeMilis, answerType) {
 	const { image, answers } = question;
 
 	/*console.log('Post new question:');
@@ -88,9 +88,38 @@ export async function postQuizQuestion(bot, channel, question) {
 		throw new Error("Invalid question data");
 	}
 
-	const keyboard = getAnswersKeyboard(answers, AnswerType.QUIZ_ANSWER);
+	const keyboard = getAnswersKeyboard(answers, answerTimeMilis, answerType);
 
 	await bot.telegram.sendPhoto(channel.chatId, image, {
 		reply_markup: keyboard
 	});
+}
+
+export async function postPoll(pollId: string) {
+	const channel = await getChannel();
+	const poll = await getPollById(pollId);
+
+	if (!channel) {
+		throw new Error('Channel isn\'t set');
+	}
+	if (!poll) {
+		throw new Error('Quiz wasn\'t found');
+	}
+
+	const bot = Bot.getBot();
+
+	const { answerTime, image, answers } = poll;
+
+	const answerTimeMilis = answerTime * 1e3;
+
+	await postQuestion(
+		bot,
+		channel,
+		{
+			image,
+			answers
+		},
+		answerTimeMilis,
+		AnswerType.POLL_ANSWER
+	);
 }

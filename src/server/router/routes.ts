@@ -30,6 +30,7 @@ const Routes = {
 		router.post('/api/poll/create', this.getAuthCheckedHandler(pollsHandlers.create));
 		router.post('/api/poll/update', this.getAuthCheckedHandler(pollsHandlers.update));
 		router.post('/api/poll/delete', this.getAuthCheckedHandler(pollsHandlers.delete));
+		router.get('/api/poll/post', this.getAuthCheckedHandler(pollsHandlers.post));
 
 		/*** Quizes ***/
 		router.get('/api/quiz/read', this.getAuthCheckedHandler(quizesHandlers.read));
