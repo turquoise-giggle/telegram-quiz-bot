@@ -1,3 +1,4 @@
+import { postQuiz } from '../../telegram/helpers/channel';
 import {
 	addQuiz,
 	getQuizes,
@@ -98,6 +99,21 @@ const handlers = {
 			for (const id of ids) {
 				await deleteQuiz(id);
 			}
+			ctx.status = 200;
+		} catch (err) {
+			console.error(err);
+			ctx.status = 500;
+		}
+	},
+	post: async (ctx) => {
+		const { id } = ctx.request.body;
+
+		if (!id) {
+			return (ctx.status = 400);
+		}
+
+		try {
+			await postQuiz(id);
 			ctx.status = 200;
 		} catch (err) {
 			console.error(err);

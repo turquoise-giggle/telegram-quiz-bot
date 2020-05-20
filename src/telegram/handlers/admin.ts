@@ -30,6 +30,12 @@ const AdminHandlers = {
 			}
 		});
 
+		bot.hears('Изменить канал ⌨️', async (ctx: any) => {
+			if (await isAdmin(ctx.from.id)) {
+				await ctx.scene.enter('editChannel');
+			}
+		});
+
 		bot.hears('Выйти из админ-панели 🚪', async (ctx) => {
 			if (await isAdmin(ctx.from.id)) {
 				await StartMessage.send(ctx);

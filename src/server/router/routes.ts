@@ -36,6 +36,7 @@ const Routes = {
 		router.post('/api/quiz/create', this.getAuthCheckedHandler(quizesHandlers.create));
 		router.post('/api/quiz/update', this.getAuthCheckedHandler(quizesHandlers.update));
 		router.post('/api/quiz/delete', this.getAuthCheckedHandler(quizesHandlers.delete));
+		router.get('/api/quiz/post', this.getAuthCheckedHandler(quizesHandlers.post));
 		
 		/*** Admin panel ***/
 		router.get('/api/auth/check', adminPanelHandlers.auth.check);
