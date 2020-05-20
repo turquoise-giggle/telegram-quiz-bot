@@ -62,7 +62,7 @@ export async function postQuiz(quizId: string) {
 
 export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId) {
 	const question = questions.shift();
-	await postQuestion(bot, channel, question, answerTimeMilis, AnswerType.QUIZ_ANSWER);
+	await postQuestion(bot, channel, question, answerTimeMilis, AnswerType.QUIZ_ANSWER, quizId);
 	if (questions.length) {
 		setTimeout(
 			postNextQuizQuestion,
@@ -78,7 +78,7 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 	}
 }
 
-export async function postQuestion(bot, channel, question, answerTimeMilis, answerType) {
+export async function postQuestion(bot, channel, question, answerTimeMilis, answerType, quizId) {
 	const { image, answers } = question;
 
 	/*console.log('Post new question:');
@@ -88,7 +88,7 @@ export async function postQuestion(bot, channel, question, answerTimeMilis, answ
 		throw new Error("Invalid question data");
 	}
 
-	const keyboard = getAnswersKeyboard(answers, answerTimeMilis, answerType);
+	const keyboard = getAnswersKeyboard(answers, answerTimeMilis, answerType, quizId);
 
 	await bot.telegram.sendPhoto(channel.chatId, image, {
 		reply_markup: keyboard
@@ -120,6 +120,7 @@ export async function postPoll(pollId: string) {
 			answers
 		},
 		answerTimeMilis,
-		AnswerType.POLL_ANSWER
+		AnswerType.POLL_ANSWER,
+		pollId
 	);
 }

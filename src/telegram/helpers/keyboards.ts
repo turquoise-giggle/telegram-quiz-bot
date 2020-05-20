@@ -1,14 +1,14 @@
 import { Markup } from 'telegraf';
 import AnswerType from '../../enums/AnswerType';
 
-export function getAnswersKeyboard(answers, answerTimeMilis: number, answerType: AnswerType) {
+export function getAnswersKeyboard(answers, answerTimeMilis: number, answerType: AnswerType, id: string) {
 	const term = Date.now() + answerTimeMilis;
 	const validCallback = answerType === AnswerType.QUIZ_ANSWER
-		? `validQuiz>${term}`
-		: `validPoll>${term}`;
+		? `validQuiz>id>${term}`
+		: `validPoll>id>${term}`;
 	const invalidCallback = answerType === AnswerType.QUIZ_ANSWER
-		? `invalidQuiz>${term}`
-		: `invalidPoll>${term}`;
+		? `invalidQuiz>id>${term}`
+		: `invalidPoll>id>${term}`;
 	const buttons = answers.map((answer) => {
 		return Markup.callbackButton(
 			answer.text,
