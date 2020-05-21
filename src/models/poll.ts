@@ -31,7 +31,7 @@ export const PollSchema: Schema = new Schema({
 			isValid: { type: Boolean }
 		}
 	],
-	priority: { type: Number, required: true }
+	priority: { type: Number }
 });
 
 const PollModel = mongoose.model<IMongoosePoll>('Poll', PollSchema);

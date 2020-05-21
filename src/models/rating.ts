@@ -9,7 +9,10 @@ export interface IRating extends Document {
 export const RatingSchema: Schema = new Schema({
 	chatId: { type: Number, required: true, unique: true },
 	correctAnswers: {
-		type: [Number],
+		type: [{
+			poll: { type: String, required: true },
+			timestamp: { type: Number, required: true }
+		}],
 		required: true,
 		default: () => []
 	}

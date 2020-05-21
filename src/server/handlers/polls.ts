@@ -1,3 +1,4 @@
+import { postPoll } from '../../telegram/helpers/channel';
 import {
 	addPoll,
 	getPolls,
@@ -88,6 +89,21 @@ const handlers = {
 			for (const id of ids) {
 				await deletePoll(id);
 			}
+			ctx.status = 200;
+		} catch (err) {
+			console.error(err);
+			ctx.status = 500;
+		}
+	},
+	post: async (ctx) => {
+		const { id } = ctx.query;
+
+		if (!id) {
+			return (ctx.status = 400);
+		}
+
+		try {
+			await postPoll(id);
 			ctx.status = 200;
 		} catch (err) {
 			console.error(err);
