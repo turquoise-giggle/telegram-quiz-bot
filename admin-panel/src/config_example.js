@@ -1,12 +1,14 @@
 const config = {
   dev: {
 	api: {
+	  useHTTPS: true,
 	  host: 'localhost',
 	  port: 80
 	}
   },
   prod: {
 	api: {
+	  useHTTPS: true,
 	  host: 'localhost',
 	  port: 8888
 	}

@@ -7,7 +7,6 @@ import Telegram from './telegram';
 async function main() {
 	await DB.connect();
 	// await Daemon.init();
-	await addAdmin('admin', 'admin');
 	await Server.init();
 	await Telegram.init();
 }

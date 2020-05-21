@@ -32,7 +32,7 @@ class App extends React.Component {
 			  <ProtectedRoute exact path="/" authorized={this.state.authorized} component={() => (
 				  <Redirect to="/quiz"/>
 			  )}/>
-			  <ProtectedRoute exact path="/quiz" authorized={this.state.authorized} component={() =>
+			  <ProtectedRoute exact path="/quizzes" authorized={this.state.authorized} component={() =>
 				  <Dashboard>
 				  </Dashboard>
 			  }/>

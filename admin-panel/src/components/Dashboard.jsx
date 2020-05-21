@@ -11,7 +11,7 @@ const menu = [
   {
 	text: 'Викторины',
 	icon: <QuestionCircleOutlined/>,
-	url: '/quiz'
+	url: '/quizzes'
   },
   {
 	text: 'Опросы',
@@ -62,7 +62,7 @@ class Dashboard extends React.Component {
 				  <img src="logo.png" alt="Logo"/>
 				</Col>
 				<Col span={this.state.menuCollapsed ? 0 : 'auto'}>
-				  <h1>"Новый проект"</h1>
+				  <h1>Quiz Bot Admin</h1>
 				</Col>
 			  </Row>
 			</div>
