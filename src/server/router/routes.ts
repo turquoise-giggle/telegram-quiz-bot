@@ -43,7 +43,7 @@ const Routes = {
 		router.get('/api/auth/check', adminPanelHandlers.auth.check);
 		router.post('/api/auth/login', adminPanelHandlers.auth.login);
 		router.get('/api/auth/logout', adminPanelHandlers.auth.logout);
-		router.post('/api/upload', adminPanelHandlers.panel.upload);
+		router.post('/api/upload', this.getAuthCheckedHandler(adminPanelHandlers.panel.upload));
 		router.get('/api/file', adminPanelHandlers.panel.file);
 		router.get('*', adminPanelHandlers.panel.main);
 	}
