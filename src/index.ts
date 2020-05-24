@@ -1,5 +1,4 @@
 import DB from './db';
-import { addAdmin } from './helpers/admins';
 import Server from './server';
 import Telegram from './telegram';
 import Daemon from './daemon/daemon';

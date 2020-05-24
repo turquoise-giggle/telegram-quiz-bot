@@ -1,5 +1,4 @@
 import Poll, { IPoll } from '../models/poll';
-import PollStatusType from '../enums/PollStatusType';
 
 export async function addPoll(pollData: IPoll) {
 	const poll = new Poll(pollData);
@@ -35,10 +34,6 @@ export async function updatePoll(
 	return Poll.findOneAndUpdate({ _id: id }, pollData);
 }
 
-export async function updatePollStatus(id: string, status: PollStatusType) {
-	await Poll.findOneAndUpdate({ _id: id }, { status });
-}
-
 export async function deletePoll(id: string) {
 	return Poll.deleteOne({ _id: id });
 }
@@ -51,6 +46,21 @@ export async function getLowestPriorityPoll() {
 	for (let i = 0; i < polls.length; i++) {
 		if (polls[i].priority > maxPriority) {
 			maxPriority = polls[i].priority;
+			index = i;
+		}
+	}
+
+	return polls[index];
+}
+
+export async function getHighestPriorityPoll() {
+	const polls = await getPolls();
+	
+	let index = 0;
+	let minPriority = Infinity;
+	for (let i = 0; i < polls.length; i++) {
+		if (polls[i].priority < minPriority) {
+			minPriority = polls[i].priority;
 			index = i;
 		}
 	}

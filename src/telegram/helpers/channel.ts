@@ -5,7 +5,7 @@ import AnswerType from '../../enums/AnswerType';
 import { getAnswersKeyboard } from './keyboards';
 import { getQuizIntroMessage } from './messages';
 import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
-import { getPollById, updatePollStatus } from '../../helpers/polls';
+import { getPollById } from '../../helpers/polls';
 
 const Markup = require('telegraf/markup');
 
@@ -49,8 +49,7 @@ export async function postQuiz(quizId: string) {
 
 	setTimeout(
 		postNextQuizQuestion,
-		//TIMEOUT_AFTER_INTRO,
-		0,
+		TIMEOUT_AFTER_INTRO,
 		bot,
 		channel,
 		answerTimeMilis,

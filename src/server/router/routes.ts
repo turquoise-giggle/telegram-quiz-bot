@@ -26,11 +26,12 @@ const Routes = {
 		});
 
 		/*** Polls ***/
-		router.get('/api/poll/read', this.getAuthCheckedHandler(pollsHandlers.read));
-		router.post('/api/poll/create', this.getAuthCheckedHandler(pollsHandlers.create));
-		router.post('/api/poll/update', this.getAuthCheckedHandler(pollsHandlers.update));
-		router.post('/api/poll/delete', this.getAuthCheckedHandler(pollsHandlers.delete));
-		router.get('/api/poll/post', this.getAuthCheckedHandler(pollsHandlers.post));
+		router.get('/api/poll/read', this.getAuthCheckedHandler(pollsHandlers.poll.read));
+		router.post('/api/poll/create', this.getAuthCheckedHandler(pollsHandlers.poll.create));
+		router.post('/api/poll/update', this.getAuthCheckedHandler(pollsHandlers.poll.update));
+		router.post('/api/poll/delete', this.getAuthCheckedHandler(pollsHandlers.poll.delete));
+		router.get('/api/poll/post', this.getAuthCheckedHandler(pollsHandlers.poll.post));
+		router.get('/api/poll/interval/update', this.getAuthCheckedHandler(pollsHandlers.interval.update));
 
 		/*** Quizes ***/
 		router.get('/api/quiz/read', this.getAuthCheckedHandler(quizesHandlers.read));

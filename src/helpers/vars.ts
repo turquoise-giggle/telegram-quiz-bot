@@ -24,7 +24,7 @@ export async function createVar(doc: IVar) {
 
 
 export async function updateVar(name: string, value: any) {
-	return VarModel.updateOne({ name }, { value });
+	return VarModel.findOneAndUpdate({ name }, { value }, { upsert: true, new: true });
 }
 
 export async function deleteVar(name: string) {
