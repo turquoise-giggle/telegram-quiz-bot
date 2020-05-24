@@ -3,9 +3,12 @@ import axios from 'axios';
 
 const { useHTTPS, host, port } = config.api;
 
+const apiURL = `${useHTTPS ? 'https' : 'http'}://${host}:${port}/api`;
+
 const api = axios.create({
-  baseURL: `${useHTTPS ? 'https' : 'http'}://${host}:${port}/api`,
+  baseURL: apiURL,
   withCredentials: true
 });
 
+export { apiURL };
 export default api;

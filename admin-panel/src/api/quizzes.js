@@ -13,7 +13,7 @@ export const updateQuiz = async ({ id, name, prize, answerTime, questions }) => 
   await api.post('/quiz/update', { id, name, prize, answerTime, questions });
 };
 
-export const deleteQuiz = async ids => {
+export const deleteQuizzes = async ids => {
   await api.post('/quiz/delete', { ids });
 };
 
