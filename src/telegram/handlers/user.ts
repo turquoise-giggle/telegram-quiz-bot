@@ -1,6 +1,7 @@
 import { Markup, Stage } from 'telegraf';
 import StartMessage from '../controllers/start';
 import { getQuizResult, updateQuizResultSuccess } from '../../helpers/quizResults';
+import { getPollResult, updatePollResultSuccess } from '../../helpers/pollResults';
 
 const AdminHandlers = {
 	init: (bot) => {
@@ -87,30 +88,56 @@ const AdminHandlers = {
 			);
 		});
 		bot.action(/^validPoll>/, async (ctx) => {
-			ctx.answerCbQuery();
-			
 			const pollId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 
 			if (term < Date.now()) {
-				/**
-				 * Время на ответ вышло
-				 */
+				return ctx.answerCbQuery(
+					'К сожалению, время на ответ истекло ⌛',
+					true
+				);
+			}
+
+			const pollResult = await getPollResult(pollId, ctx.from.id);
+
+			// User has already answered this question
+			if (pollResult) {
 				return;
 			}
+			
+			// Set success to true
+			await updatePollResultSuccess(pollId, ctx.from.id, true);
+
+			return ctx.answerCbQuery(
+				'Выбран правильный ответ ✅',
+				true
+			);
 		});
-		bot.action(/^validPoll>/, async (ctx) => {
-			ctx.answerCbQuery();
-			
+		bot.action(/^invalidPoll>/, async (ctx) => {
 			const pollId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 
 			if (term < Date.now()) {
-				/**
-				 * Время на ответ вышло
-				 */
+				return ctx.answerCbQuery(
+					'К сожалению, время на ответ истекло ⌛',
+					true
+				);
+			}
+
+			const pollResult = await getPollResult(pollId, ctx.from.id);
+
+			// User has already answered this question
+			if (pollResult) {
 				return;
 			}
+			
+			// Set success to true
+			await updatePollResultSuccess(pollId, ctx.from.id, false);
+
+			return ctx.answerCbQuery(
+				'Выбран неправильный ответ ❌',
+				true
+			);
 		});
 	}
 };
