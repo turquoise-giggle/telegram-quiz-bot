@@ -41,8 +41,6 @@ export async function postQuiz(quizId: string) {
 
 	const quizIntroMessage = getQuizIntroMessage(name, prize, answerTime);
 
-	console.log(quizIntroMessage);
-
 	await bot.telegram.sendMessage(channel.chatId, quizIntroMessage, {
 		parse_mode: 'HTML'
 	});
@@ -51,7 +49,8 @@ export async function postQuiz(quizId: string) {
 
 	setTimeout(
 		postNextQuizQuestion,
-		TIMEOUT_AFTER_INTRO,
+		//TIMEOUT_AFTER_INTRO,
+		0,
 		bot,
 		channel,
 		answerTimeMilis,
@@ -60,9 +59,18 @@ export async function postQuiz(quizId: string) {
 	);
 }
 
-export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId) {
+export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId, prevTerm?) {
 	const question = questions.shift();
-	await postQuestion(bot, channel, question, answerTimeMilis, AnswerType.QUIZ_ANSWER, quizId);
+	const term = await postQuestion(
+		bot,
+		channel,
+		{
+			question,
+			answerTimeMilis,
+			answerType: AnswerType.QUIZ_ANSWER,
+			id: quizId,
+			prevTerm
+		});
 	if (questions.length) {
 		setTimeout(
 			postNextQuizQuestion,
@@ -71,28 +79,37 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 			channel,
 			answerTimeMilis,
 			questions,
-			quizId
+			quizId,
+			term
 		);
 	} else {
 		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
+		//...
 	}
 }
 
-export async function postQuestion(bot, channel, question, answerTimeMilis, answerType, quizId) {
+export async function postQuestion(bot, channel, params: {
+	question: any,
+	answerTimeMilis: number,
+	answerType: AnswerType,
+	id: string,
+	prevTerm?: number
+}) {
+	const { question, answerTimeMilis, answerType, id, prevTerm } = params;
 	const { image, answers } = question;
-
-	/*console.log('Post new question:');
-	console.dir({ image, answers });*/
 
 	if (!image || !answers || !answers.length) {
 		throw new Error("Invalid question data");
 	}
 
-	const keyboard = getAnswersKeyboard(answers, answerTimeMilis, answerType, quizId);
+	const term = Date.now() + answerTimeMilis;
+	const keyboard = getAnswersKeyboard(answers, term, answerType, id, prevTerm);
 
 	await bot.telegram.sendPhoto(channel.chatId, image, {
 		reply_markup: keyboard
 	});
+
+	return term;
 }
 
 export async function postPoll(pollId: string) {
@@ -116,11 +133,13 @@ export async function postPoll(pollId: string) {
 		bot,
 		channel,
 		{
-			image,
-			answers
+			question: {
+				image,
+				answers
+			},
+			answerTimeMilis,
+			answerType: AnswerType.POLL_ANSWER,
+			id: pollId
 		},
-		answerTimeMilis,
-		AnswerType.POLL_ANSWER,
-		pollId
 	);
 }
