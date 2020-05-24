@@ -40,6 +40,7 @@ const handlers = {
 			const body = {
 				quizes: quizes.map((quiz) => {
 					return {
+						id: quiz._id,
 						name: quiz.name,
 						prize: quiz.prize,
 						status: quiz.status,
