@@ -31,6 +31,7 @@ const Routes = {
 		router.post('/api/poll/update', this.getAuthCheckedHandler(pollsHandlers.poll.update));
 		router.post('/api/poll/delete', this.getAuthCheckedHandler(pollsHandlers.poll.delete));
 		router.get('/api/poll/post', this.getAuthCheckedHandler(pollsHandlers.poll.post));
+		router.get('/api/poll/interval/read', this.getAuthCheckedHandler(pollsHandlers.interval.read));
 		router.get('/api/poll/interval/update', this.getAuthCheckedHandler(pollsHandlers.interval.update));
 
 		/*** Quizes ***/

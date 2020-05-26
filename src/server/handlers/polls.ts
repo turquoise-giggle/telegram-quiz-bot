@@ -1,4 +1,5 @@
 import Daemon from '../../daemon/daemon';
+import { getVar } from '../../helpers/vars';
 import { postPoll } from '../../telegram/helpers/channel';
 import {
 	addPoll,
@@ -113,6 +114,18 @@ const handlers = {
 		}
 	},
 	interval: {
+		read: async (ctx) => {
+			try {
+				const postNewPollInterval = await getVar('postNewPollInterval');
+				ctx.status = 200;
+				ctx.body = {
+					postNewPollInterval: postNewPollInterval.value || null
+				};
+			} catch (err) {
+				console.error(err);
+				ctx.status = 500;
+			}
+		},
 		update: async (ctx) => {
 			const { intervalTime } = ctx.query;
 
