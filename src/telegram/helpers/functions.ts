@@ -4,6 +4,10 @@ import { ContextMessageUpdate } from 'telegraf';
 import { promisify } from 'util';
 import User, { IUser } from '../models/user';
 
+export async function getUserByChatId(chatId: number) {
+	return User.findOne({ chatId });
+}
+
 /**
  * Получает список пользователей
  * @async
