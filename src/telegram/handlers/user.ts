@@ -3,38 +3,8 @@ import StartMessage from '../controllers/start';
 import { getQuizResult, updateQuizResultSuccess } from '../../helpers/quizResults';
 import { getPollResult, addPollResult } from '../../helpers/pollResults';
 
-import { getPollResultsTableCurrentWeek, getPollResultsTableToday } from '../../helpers/excel';
-
 const AdminHandlers = {
 	init: (bot) => {
-		bot.command('resultToday', async (ctx) => {
-			try {
-				const excelTable = await getPollResultsTableToday();
-				const filename = `Результаты опросы сегодня.xlsx`;
-				await ctx.replyWithDocument({
-					source: excelTable,
-					filename
-				});
-			} catch (err) {
-				console.error(err);
-				await ctx.reply('Не удалось выгрузить таблицу результатов. Приносим извинения');
-			}
-		});
-
-		bot.command('resultWeek', async (ctx) => {
-			try {
-				const excelTable = await getPollResultsTableCurrentWeek();
-				const filename = `Результаты опросы неделя.xlsx`;
-				await ctx.replyWithDocument({
-					source: excelTable,
-					filename
-				});
-			} catch (err) {
-				console.error(err);
-				await ctx.reply('Не удалось выгрузить таблицу результатов. Приносим извинения');
-			}
-		});
-
 		bot.action(/^validQuiz>/, async (ctx) => {
 			const quizId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];

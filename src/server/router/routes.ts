@@ -33,13 +33,16 @@ const Routes = {
 		router.get('/api/poll/post', this.getAuthCheckedHandler(pollsHandlers.poll.post));
 		router.get('/api/poll/interval/read', this.getAuthCheckedHandler(pollsHandlers.interval.read));
 		router.get('/api/poll/interval/update', this.getAuthCheckedHandler(pollsHandlers.interval.update));
+		router.get('/api/poll/results/day/read', this.getAuthCheckedHandler(pollsHandlers.results.day.read));
+		router.get('/api/poll/results/week/read', this.getAuthCheckedHandler(pollsHandlers.results.week.read));
 
 		/*** Quizes ***/
-		router.get('/api/quiz/read', this.getAuthCheckedHandler(quizesHandlers.read));
-		router.post('/api/quiz/create', this.getAuthCheckedHandler(quizesHandlers.create));
-		router.post('/api/quiz/update', this.getAuthCheckedHandler(quizesHandlers.update));
-		router.post('/api/quiz/delete', this.getAuthCheckedHandler(quizesHandlers.delete));
-		router.get('/api/quiz/post', this.getAuthCheckedHandler(quizesHandlers.post));
+		router.get('/api/quiz/read', this.getAuthCheckedHandler(quizesHandlers.quiz.read));
+		router.post('/api/quiz/create', this.getAuthCheckedHandler(quizesHandlers.quiz.create));
+		router.post('/api/quiz/update', this.getAuthCheckedHandler(quizesHandlers.quiz.update));
+		router.post('/api/quiz/delete', this.getAuthCheckedHandler(quizesHandlers.quiz.delete));
+		router.get('/api/quiz/post', this.getAuthCheckedHandler(quizesHandlers.quiz.post));
+		router.get('/api/quiz/results/read', this.getAuthCheckedHandler(quizesHandlers.results.read));
 		
 		/*** Admin panel ***/
 		router.get('/api/auth/check', adminPanelHandlers.auth.check);

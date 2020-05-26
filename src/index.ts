@@ -8,7 +8,7 @@ async function main() {
 	await Daemon.init();
 
 	await Server.init();
-	await Telegram.init();
+	// await Telegram.init();
 }
 
 main();

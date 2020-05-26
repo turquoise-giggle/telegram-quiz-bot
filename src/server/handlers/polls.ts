@@ -1,6 +1,11 @@
 import Daemon from '../../daemon/daemon';
 import { getVar } from '../../helpers/vars';
+import { bufferToStream } from '../../helpers/functions';
 import { postPoll } from '../../telegram/helpers/channel';
+import {
+	getPollResultsTableToday,
+	getPollResultsTableCurrentWeek
+} from '../../helpers/excel';
 import {
 	addPoll,
 	getPolls,
@@ -141,6 +146,36 @@ const handlers = {
 				ctx.status = 500;
 			}
 		}
+	},
+	results: {
+		day: {
+			read: async (ctx) => {
+				try {
+					const table = await getPollResultsTableToday();
+					ctx.set('Content-disposition', 'attachment; filename=' + encodeURIComponent('Рейтинг опросы день.xlsx'));
+					ctx.set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+					ctx.body = bufferToStream(table);
+					ctx.status = 200;
+				} catch (err) {
+					console.error(err);
+					ctx.status = 500;
+				}
+			}
+		},
+		week: {
+			read: async (ctx) => {
+				try {
+					const table = await getPollResultsTableCurrentWeek();
+					ctx.set('Content-disposition', 'attachment; filename=' + encodeURIComponent('Рейтинг опросы неделя.xlsx'));
+					ctx.set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+					ctx.body = bufferToStream(table);
+					ctx.status = 200;
+				} catch (err) {
+					console.error(err);
+					ctx.status = 500;
+				}
+			}
+		},
 	}
 };
 

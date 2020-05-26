@@ -5,14 +5,62 @@ import { getQuizResultsByQuizId } from './quizResults';
 import { getPollResults } from './pollResults';
 import { getUserByChatId } from '../telegram/helpers/functions';
 
+const QUIZ_RESULTS_HEADER = [
+	'Юзернейм',
+	'Имя пользователя'
+];
 const POLL_RESULTS_HEADER = [
 	'Юзернейм',
 	'Имя пользователя',
 	'Правильных ответов'
-]
+];
 
 export async function getQuizResultsTable(quizId: string) {
-	const quizResults = await getQuizResultsByQuizId(quizId)
+	const quizResults = await getQuizResultsByQuizId(quizId);
+
+	const resultsData = [];
+
+	for (const quizResult of quizResults) {
+		const { userId, success } = quizResult;
+		
+		if (!success) { continue; }
+		
+		const user = await getUserByChatId(userId);
+
+		const username = `@${user.username}` || '-';
+		const name = user.name || '-';
+		
+		resultsData.push([username, name]);
+	}
+
+	if (!resultsData.length) {
+		resultsData.push(['-', '-']);
+	}
+
+	const workbook = await XlsxPopulate.fromBlankAsync();
+	
+	workbook
+		.activeSheet()
+		.name('Результаты викторины');
+
+	workbook
+		.activeSheet()
+		.cell('A1')
+		.value([QUIZ_RESULTS_HEADER]);
+
+	for (let i = 0; i < QUIZ_RESULTS_HEADER.length; i++) {
+		workbook
+			.activeSheet()
+			.column(i + 1)
+			.width(25);
+	}
+
+	workbook
+		.activeSheet()
+		.cell('A2')
+		.value(resultsData);
+
+	return workbook.outputAsync();
 }
 
 export async function getPollResultsTableSince(since: number) {
@@ -42,6 +90,10 @@ export async function getPollResultsTableSince(since: number) {
 		const result = results[userId];
 		
 		resultsData.push([username, name, result]);
+	}
+
+	if (!resultsData.length) {
+		resultsData.push(['-', '-', '-']);
 	}
 
 	const workbook = await XlsxPopulate.fromBlankAsync();
