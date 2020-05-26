@@ -13,7 +13,7 @@ export const updatePoll = async ({ id, answerTime, answers }) => {
   await api.post('/poll/update', { id, answerTime, answers });
 };
 
-export const deletePoll = async ids => {
+export const deletePolls = async ids => {
   await api.post('/poll/delete', { ids });
 };
 

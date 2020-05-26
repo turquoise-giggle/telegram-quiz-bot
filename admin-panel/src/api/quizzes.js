@@ -6,7 +6,8 @@ export const fetchQuizzes = async () => {
 };
 
 export const createQuiz = async ({ name, prize, answerTime, questions }) => {
-  await api.post('/quiz/create', { name, prize, answerTime, questions });
+  const { data } = await api.post('/quiz/create', { name, prize, answerTime, questions });
+  return data.id;
 };
 
 export const updateQuiz = async ({ id, name, prize, answerTime, questions }) => {

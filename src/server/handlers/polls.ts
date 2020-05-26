@@ -46,6 +46,7 @@ const handlers = {
 				const body = {
 					polls: polls.map((poll) => {
 						return {
+							id: poll._id,
 							answerTime: poll.answerTime,
 							image: poll.image,
 							answers: poll.answers,

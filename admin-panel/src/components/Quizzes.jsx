@@ -3,12 +3,13 @@ import { Badge, Button, message, Table } from 'antd';
 import { DeleteFilled, DownloadOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { deleteQuizzes, fetchQuizzes } from '../api/quizzes';
 import { withRouter } from 'react-router';
+import { apiURL } from '../api/api';
 
 const columns = [
   {
 	title: 'Название',
 	dataIndex: 'name',
-	sorter: (a, b) => a.name - b.name,
+	sorter: (a, b) => a.name.localeCompare(b.name),
 	sortDirections: ['descend', 'ascend'],
 	showSorterTooltip: false,
 	responsive: ['md']
@@ -16,18 +17,23 @@ const columns = [
   {
 	title: 'Приз',
 	dataIndex: 'prize',
-	sorter: (a, b) => a.prize - b.prize,
+	sorter: (a, b) => a.prize.localeCompare(b.prize),
 	sortDirections: ['descend', 'ascend'],
-	showSorterTooltip: false
+	showSorterTooltip: false,
+	responsive: ['md']
   },
   {
 	title: 'Статус',
 	dataIndex: 'statusText',
-	sorter: (a, b) => a.status - b.status,
+	sorter: (a, b) => {
+	  if (a.status === b.status) {
+		return a.name.localeCompare(b.name);
+	  }
+	  return a.status - b.status;
+	},
 	sortDirections: ['descend', 'ascend'],
 	showSorterTooltip: false,
-	defaultSortOrder: 'ascend',
-	responsive: ['md']
+	defaultSortOrder: 'ascend'
   },
   {
 	title: 'Отчёт',
@@ -42,12 +48,12 @@ class Quizzes extends React.Component {
 	data: []
   };
 
-  componentDidMount() {
-	this.updateData()
-		.then(() => this.setState({ loading: false }));
-  }
+  componentDidMount = async () => {
+	await this.updateData();
+	this.setState({ loading: false });
+  };
 
-  async updateData() {
+  updateData = async () => {
 	try {
 	  const data = await fetchQuizzes();
 	  this.setState({
@@ -57,7 +63,8 @@ class Quizzes extends React.Component {
 			statusText: item.status === 0
 				? <Badge status="processing" text="Проходит"/>
 				: <Badge status="success" text="Завершена"/>,
-			report: <Button type="dashed" icon={<DownloadOutlined/>} onClick={this.onDownloadReportClicked}/>,
+			report: <Button type="dashed" icon={<DownloadOutlined/>}
+							href={`${apiURL}/quiz/results/read?id=${item.id}`}/>,
 			key: item.id
 		  };
 		})
@@ -66,10 +73,6 @@ class Quizzes extends React.Component {
 	catch (err) {
 	  message.error('Не удалось загрузить данные');
 	}
-  }
-
-  onDownloadReportClicked = () => {
-	console.log('Downloading report...');
   };
 
   onCreateClicked = () => {
@@ -121,6 +124,7 @@ class Quizzes extends React.Component {
 		  	{hasSelected ? `Выбрано ${selectedRowKeys.length} викторин(а)` : ''}
 		  </span>
 		  </div>
+
 		  <Table loading={this.state.loading}
 				 rowSelection={rowSelection}
 				 columns={columns}

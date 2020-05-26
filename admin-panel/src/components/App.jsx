@@ -10,6 +10,8 @@ import ProtectedRoute from './ProtectedRoute';
 import Loading from './Loading';
 import Quizzes from './Quizzes';
 import CreateQuiz from './CreateQuiz';
+import Polls from './Polls';
+import CreatePoll from './CreatePoll';
 
 class App extends React.Component {
   state = {
@@ -46,6 +48,12 @@ class App extends React.Component {
 			  }/>
 			  <ProtectedRoute exact path="/polls" authorized={this.state.authorized} component={() =>
 				  <Dashboard>
+					<Polls />
+				  </Dashboard>
+			  }/>
+			  <ProtectedRoute exact path="/createpoll" authorized={this.state.authorized} component={() =>
+				  <Dashboard>
+					<CreatePoll />
 				  </Dashboard>
 			  }/>
 			  <Route exact path="/login" component={Login}/>
