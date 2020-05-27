@@ -4,17 +4,8 @@ import { withRouter } from 'react-router';
 import '../styles/CreateQuiz.css';
 import { DeleteFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadFile } from '../api/files';
-import { createQuiz } from '../api/quizzes';
-
-const generateKey = (length = 8) => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let res = '';
-
-  while (res.length < length) {
-	res += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return res;
-};
+import { createQuiz, postQuiz } from '../api/quizzes';
+import { generateKey } from '../helpers/functions';
 
 const initialState = {
   questions: [{
@@ -45,7 +36,7 @@ class CreateQuiz extends React.Component {
   };
 
   onReloadClicked = () => {
-    window.location.reload();
+	window.location.reload();
   };
 
   onAddQuestionClicked = () => {
@@ -54,7 +45,18 @@ class CreateQuiz extends React.Component {
 	questions.push({
 	  key: generateKey(),
 	  image: undefined,
-	  answers: []
+	  answers: [
+		{
+		  key: 0,
+		  text: '',
+		  isValid: false
+		},
+		{
+		  key: 1,
+		  text: '',
+		  isValid: true
+		}
+	  ]
 	});
 
 	this.setState({ questions });
@@ -160,7 +162,8 @@ class CreateQuiz extends React.Component {
 	const { questions } = this.state;
 
 	try {
-	  await createQuiz({ name, answerTime, prize, questions });
+	  const id = await createQuiz({ name, answerTime, prize, questions });
+	  await postQuiz(id);
 
 	  this.setState({ ...initialState, showSuccess: true });
 	}
@@ -197,7 +200,7 @@ class CreateQuiz extends React.Component {
 				className="CreateQuizForm"
 				onFinish={this.onFormSubmit}
 				initialValues={{
-				  answerTime: 2
+				  answerTime: 30
 				}}
 				visible={this.state.showSuccess.toString()}
 			>
@@ -236,8 +239,8 @@ class CreateQuiz extends React.Component {
 				  ]}
 			  >
 			  <span>
-			  	<InputNumber defaultValue={2} style={{ width: 60 }} min={1}/>
-			  	<span style={{ marginLeft: 10 }}>мин.</span>
+			  	<InputNumber defaultValue={30} style={{ width: 60 }} min={1}/>
+			  	<span style={{ marginLeft: 10 }}>сек.</span>
 			  </span>
 			  </Form.Item>
 
@@ -289,20 +292,22 @@ class CreateQuiz extends React.Component {
 						<Radio.Group defaultValue={this.getCorrectAnswer(question)?.key ?? 0}>
 						  {question.answers.map(answer => {
 							return (
-								<div key={answer.key}>
+								<div key={answer.key} style={{ marginBottom: 10 }}>
 								  <Radio
 									  onChange={e => this.onAnswerSwitched(question.key, answer.key, e.target.checked)}
-									  value={answer.key} style={{ lineHeight: 3, height: 3 }}>
+									  value={answer.key}
+									  style={{ lineHeight: 3, height: 3, width: '80%' }}
+								  >
 									<Input
 										placeholder="Ответ..."
 										onChange={e => this.onAnswerTextChanged(question.key, answer.key, e.target.value)}
 									/>
+									<Button
+										icon={<DeleteFilled/>}
+										style={{ marginLeft: -10 }}
+										onClick={() => this.onDeleteAnswerClicked(question.key, answer.key)}
+									/>
 								  </Radio>
-								  <Button
-									  icon={<DeleteFilled/>}
-									  style={{ marginLeft: 15 }}
-									  onClick={() => this.onDeleteAnswerClicked(question.key, answer.key)}
-								  />
 								</div>
 							);
 						  })}
@@ -323,6 +328,7 @@ class CreateQuiz extends React.Component {
 		  <Result
 			  status="success"
 			  title="Викторина успешно создана!"
+			  subTitle="Викторина была создана и отправлена в канал"
 			  extra={[
 				<Button key="back" type="primary" onClick={this.onBackClicked}>
 				  Вернуться к списку

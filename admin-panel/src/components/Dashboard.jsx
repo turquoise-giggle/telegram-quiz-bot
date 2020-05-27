@@ -47,6 +47,16 @@ class Dashboard extends React.Component {
 	}
   };
 
+  checkResolutionAndWarn = () => {
+    if (window.screen.width < 768) {
+      message.warn('Данные отображены не полностью. Рекомендуем сменить ориентацию смартфона', 5)
+	}
+  };
+
+  componentDidMount = () => {
+	this.checkResolutionAndWarn();
+  };
+
   render() {
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
