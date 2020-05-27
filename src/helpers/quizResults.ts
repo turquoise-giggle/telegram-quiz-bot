@@ -26,3 +26,7 @@ export async function updateQuizResultSuccess(quizId: string, userId: number, la
 export async function deleteQuizResult(quizId: string, userId: number) {
 	await QuizResult.deleteOne({ quizId, userId });
 }
+
+export async function updateQuizResultSuccessByFilter(filter, success: boolean) {
+	await QuizResult.updateMany(filter, { success });
+}

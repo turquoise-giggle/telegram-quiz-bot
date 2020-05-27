@@ -4,9 +4,9 @@ import QuizStatusType from '../../enums/QuizStatusType';
 import AnswerType from '../../enums/AnswerType';
 import { getAnswersKeyboard } from './keyboards';
 import { getQuizIntroMessage } from './messages';
-import { countWinnersByQuizId } from '../../helpers/quizResults';
-import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
+import { countWinnersByQuizId, updateQuizResultSuccessByFilter } from '../../helpers/quizResults';
 import { getPollById } from '../../helpers/polls';
+import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
 
 const Markup = require('telegraf/markup');
 
@@ -61,6 +61,13 @@ export async function postQuiz(quizId: string) {
 
 export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId, prevTerm?) {
 	if (!questions.length) {
+		await updateQuizResultSuccessByFilter(
+			{
+				quizId,
+				lastAnswerTerm: { $lt: prevTerm }
+			},
+			false
+		);
 		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
 		const numberOfWinners = await countWinnersByQuizId(quizId);
 		const message = `Викторина <b>завершена</b>! Количество победителей: ${numberOfWinners} пользователей`;
@@ -91,22 +98,6 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 			term
 		);
 	}
-
-	/*if (questions.length) {
-		setTimeout(
-			postNextQuizQuestion,
-			answerTimeMilis,
-			bot,
-			channel,
-			answerTimeMilis,
-			questions,
-			quizId,
-			term
-		);
-	} else {
-		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
-		//...
-	}*/
 }
 
 export async function postQuestion(bot, channel, params: {

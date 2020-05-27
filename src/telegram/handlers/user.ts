@@ -21,7 +21,7 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (quizResult && quizResult.lastAnswerTerm === term) {
-				return;
+				return ctx.answerCbQuery();
 			}
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
@@ -62,7 +62,7 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (quizResult && quizResult.lastAnswerTerm === term) {
-				return;
+				return ctx.answerCbQuery();
 			}
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
@@ -102,7 +102,7 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (pollResult) {
-				return;
+				return ctx.answerCbQuery();
 			}
 			
 			// Set success to true
@@ -128,7 +128,7 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (pollResult) {
-				return;
+				return ctx.answerCbQuery();
 			}
 			
 			// Set success to true
