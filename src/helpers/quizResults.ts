@@ -4,6 +4,13 @@ export async function getQuizResults(filter = {}) {
 	return QuizResult.find(filter);
 }
 
+export async function countWinnersByQuizId(quizId: string) {
+	return QuizResult.countDocuments({
+		quizId,
+		success: true
+	});
+}
+
 export async function getQuizResultsByQuizId(quizId: string) {
 	return getQuizResults({ quizId });
 }

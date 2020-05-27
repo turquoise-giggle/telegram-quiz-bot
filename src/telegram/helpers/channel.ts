@@ -4,6 +4,7 @@ import QuizStatusType from '../../enums/QuizStatusType';
 import AnswerType from '../../enums/AnswerType';
 import { getAnswersKeyboard } from './keyboards';
 import { getQuizIntroMessage } from './messages';
+import { countWinnersByQuizId } from '../../helpers/quizResults';
 import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
 import { getPollById } from '../../helpers/polls';
 
@@ -59,18 +60,39 @@ export async function postQuiz(quizId: string) {
 }
 
 export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId, prevTerm?) {
-	const question = questions.shift();
-	const term = await postQuestion(
-		bot,
-		channel,
-		{
-			question,
-			answerTimeMilis,
-			answerType: AnswerType.QUIZ_ANSWER,
-			id: quizId,
-			prevTerm
+	if (!questions.length) {
+		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
+		const numberOfWinners = await countWinnersByQuizId(quizId);
+		const message = `Викторина <b>завершена</b>! Количество победителей: ${numberOfWinners} пользователей`;
+		await bot.telegram.sendMessage(channel.chatId, message, {
+			parse_mode: 'HTML'
 		});
-	if (questions.length) {
+	} else {
+		const question = questions.shift();
+		const term = await postQuestion(
+			bot,
+			channel,
+			{
+				question,
+				answerTimeMilis,
+				answerType: AnswerType.QUIZ_ANSWER,
+				id: quizId,
+				prevTerm
+			}
+		);
+		setTimeout(
+			postNextQuizQuestion,
+			answerTimeMilis,
+			bot,
+			channel,
+			answerTimeMilis,
+			questions,
+			quizId,
+			term
+		);
+	}
+
+	/*if (questions.length) {
 		setTimeout(
 			postNextQuizQuestion,
 			answerTimeMilis,
@@ -84,7 +106,7 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 	} else {
 		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
 		//...
-	}
+	}*/
 }
 
 export async function postQuestion(bot, channel, params: {
