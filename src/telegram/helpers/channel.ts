@@ -77,7 +77,9 @@ export async function postNextQuizQuestion(bot, channel, questions, quizId, prev
 		const quiz = await getQuizById(quizId);
 		const { answerTime, interval } = quiz;
 		const answerTimeMilis = answerTime * 1e3;
-		const intervalMilis = interval * 1e3;
+		const intervalMilis = interval
+			? interval * 1e3
+			: answerTimeMilis;
 
 		const question = questions.shift();
 		const term = await postQuestion(
