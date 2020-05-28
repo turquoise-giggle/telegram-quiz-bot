@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Dashboard.css';
 import { Button, Col, Layout, Menu, message, Row } from 'antd';
-import { QuestionCircleOutlined, ContainerOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, ContainerOutlined, EditOutlined } from '@ant-design/icons';
 import { signOut } from '../api/auth';
 import { withRouter } from 'react-router';
 
@@ -17,6 +17,11 @@ const menu = [
 	text: 'Опросы',
 	icon: <ContainerOutlined />,
 	url: '/polls'
+  },
+  {
+	text: 'Тексты',
+	icon: <EditOutlined />,
+	url: '/texts'
   }
 ];
 

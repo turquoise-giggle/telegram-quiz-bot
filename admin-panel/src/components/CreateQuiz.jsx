@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, Collapse, Form, Input, InputNumber, message, PageHeader, Radio, Result, Row, Upload } from 'antd';
-import { withRouter } from 'react-router';
 import '../styles/CreateQuiz.css';
 import { DeleteFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadFile } from '../api/files';
 import { createQuiz, postQuiz } from '../api/quizzes';
 import { generateKey } from '../helpers/functions';
+import { withRouter } from 'react-router';
 
 const initialState = {
   questions: [{
@@ -152,7 +152,7 @@ class CreateQuiz extends React.Component {
 	this.setState({ questions });
   };
 
-  onFormSubmit = async ({ name, prize, answerTime }) => {
+  onFormSubmit = async ({ name, prize, answerTime, interval }) => {
 	const formIsValid = this.validateEntireForm();
 
 	if (!formIsValid) {
@@ -162,7 +162,8 @@ class CreateQuiz extends React.Component {
 	const { questions } = this.state;
 
 	try {
-	  const id = await createQuiz({ name, answerTime, prize, questions });
+	  interval *= 60;
+	  const id = await createQuiz({ name, answerTime, prize, questions, interval });
 	  await postQuiz(id);
 
 	  this.setState({ ...initialState, showSuccess: true });
@@ -200,7 +201,8 @@ class CreateQuiz extends React.Component {
 				className="CreateQuizForm"
 				onFinish={this.onFormSubmit}
 				initialValues={{
-				  answerTime: 30
+				  answerTime: 30,
+				  interval: 0
 				}}
 				visible={this.state.showSuccess.toString()}
 			>
@@ -242,6 +244,26 @@ class CreateQuiz extends React.Component {
 			  	<InputNumber defaultValue={30} style={{ width: 60 }} min={1}/>
 			  	<span style={{ marginLeft: 10 }}>сек.</span>
 			  </span>
+			  </Form.Item>
+
+			  <Form.Item
+				  label="Интервал отправки вопросов"
+				  name="interval"
+				  rules={[
+					{
+					  required: true,
+					  message: 'Вы должны установить интервал между вопросами'
+					}
+				  ]}
+			  >
+				<span>
+				  <InputNumber
+					  min={0}
+					  defaultValue={0}
+					  style={{ width: 60 }}
+				  />
+				  <span style={{ marginLeft: 10 }}>мин.</span>
+				</span>
 			  </Form.Item>
 
 			  <Button type="dashed" icon={<PlusOutlined/>} onClick={this.onAddQuestionClicked}>

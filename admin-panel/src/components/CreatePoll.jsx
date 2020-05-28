@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/CreatePoll.css';
-import { Button, Col, Input, InputNumber, message, PageHeader, Radio, Result, Row, Upload } from 'antd';
+import { Button, Checkbox, Col, Input, InputNumber, message, PageHeader, Radio, Result, Row, Upload } from 'antd';
 import { withRouter } from 'react-router';
 import { DeleteFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadFile } from '../api/files';
@@ -12,7 +12,8 @@ const initialState = {
   question: {
 	image: undefined,
 	fileList: [],
-	answerTime: 30,
+	unlimitedAnswerTime: false,
+	answerTime: 5,
 	answers: [
 	  {
 		key: generateKey(),
@@ -49,6 +50,15 @@ class CreatePoll extends React.Component {
     question.answerTime = +time;
 
     this.setState({ question });
+  };
+
+  onAnswerTimeSwitched = e => {
+	const { question } = this.state;
+	question.unlimitedAnswerTime = e.target.checked;
+
+	this.setState({ question });
+
+	console.log(this.state);
   };
 
   onAddAnswerClicked = () => {
@@ -129,6 +139,13 @@ class CreatePoll extends React.Component {
 
 	const { question } = this.state;
 
+	delete question.fileList;
+
+	if (question.unlimitedAnswerTime)
+	  delete question.answerTime;
+	else
+	  question.answerTime *= 60;
+
 	try {
 	  await createPoll(question);
 	  this.setState({ ...initialState, showSuccess: true });
@@ -141,8 +158,6 @@ class CreatePoll extends React.Component {
 
   validateEntireForm = () => {
 	const { question } = this.state;
-
-	console.log(question);
 
 	return (
 		question.image &&
@@ -186,9 +201,14 @@ class CreatePoll extends React.Component {
 					  min={1}
 					  value={this.state.question.answerTime}
 					  onChange={this.onAnswerTimeChanged}
+					  disabled={this.state.question.unlimitedAnswerTime}
 					  style={{ width: 60 }}
 				  />
-				  <span style={{ marginLeft: 10 }}>сек.</span>
+				  <span style={{ marginLeft: 10 }}>мин.</span>
+				</div>
+
+				<div style={{ marginTop: 15 }}>
+				  <Checkbox checked={this.state.question.unlimitedAnswerTime} onChange={this.onAnswerTimeSwitched}>Неграниченное время ответа</Checkbox>
 				</div>
 
 				<div style={{ marginTop: 15 }}>
