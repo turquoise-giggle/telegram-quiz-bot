@@ -21,7 +21,7 @@ const handlers = {
 				image,
 				answers
 			} = ctx.request.body;
-			if (!answerTime || !image || !answers || !answers.length) {
+			if (!image || !answers || !answers.length) {
 				return (ctx.status = 400);
 			}
 			try {

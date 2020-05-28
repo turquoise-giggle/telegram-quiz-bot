@@ -12,6 +12,7 @@ const Markup = require('telegraf/markup');
 
 const DEFAULT_FLAG = true;
 const TIMEOUT_AFTER_INTRO = 30 * 1e3; // 30 sec
+const ONE_YEAR_MILIS = 365 * 24 * 60 * 60 * 1e3; // 1 year
 
 export async function getChannel() {
 	return Channel.findOne({ flag: DEFAULT_FLAG });
@@ -141,7 +142,9 @@ export async function postPoll(pollId: string) {
 
 	const { answerTime, image, answers } = poll;
 
-	const answerTimeMilis = answerTime * 1e3;
+	const answerTimeMilis = answerTime
+		? answerTime * 1e3
+		: ONE_YEAR_MILIS;
 
 	await postQuestion(
 		bot,

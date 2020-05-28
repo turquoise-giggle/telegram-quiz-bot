@@ -16,11 +16,8 @@ const Daemon = {
 		const postNewPollIntervalVar =
 			await getVar('postNewPollInterval') ||
 			await updateVar('postNewPollInterval', DEFAULT_POST_NEW_POLL_INTERVAL);
-
 		const intervalTimeMilis = postNewPollIntervalVar.value * 1e3;
-		
 		this.postNewPollInterval = setInterval(this.postNewPoll, intervalTimeMilis);
-
 		console.log('>>> Daemon инициализирован');
 	},
 	setPostNewPollIntervalTime: async function(intervalTime: number) {
