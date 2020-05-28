@@ -32,19 +32,16 @@ const handlers = {
 		}
 	},
 	update: async (ctx) => {
-		const {
-			id,
-			value
-		} = ctx.request.body;
-		if (!id || !value) {
+		const { texts } = ctx.request.body;
+		if (!texts) {
 			return (ctx.status = 400);
 		}
 		try {
-			await Texts.setText(id, value);
+			for (const id in texts) {
+				const value = texts[id];
+				await Texts.setText(id, value);
+			}
 			ctx.status = 200;
-			ctx.body = {
-				id
-			};
 		} catch (err) {
 			console.error(err);
 			ctx.status = 500;
