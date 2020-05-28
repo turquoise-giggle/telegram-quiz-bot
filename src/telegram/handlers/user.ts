@@ -13,7 +13,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('timeIsOver'),
+					Texts.getText('quiz.timeIsOver'),
 					true
 				);
 			}
@@ -27,14 +27,14 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					Texts.getText('invalidPrevQuestion'),
+					Texts.getText('quiz.invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					Texts.getText('noAnswerPrevQuestion'),
+					Texts.getText('quiz.noAnswerPrevQuestion'),
 					true
 				);
 			}
@@ -43,7 +43,7 @@ const AdminHandlers = {
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, true);
 
 			return ctx.answerCbQuery(
-				Texts.getText('validAnswer'),
+				Texts.getText('quiz.validAnswer'),
 				true
 			);
 		});
@@ -54,7 +54,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('timeIsOver'),
+					Texts.getText('quiz.timeIsOver'),
 					true
 				);
 			}
@@ -68,14 +68,14 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					Texts.getText('invalidPrevQuestion'),
+					Texts.getText('quiz.invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					Texts.getText('noAnswerPrevQuestion'),
+					Texts.getText('quiz.noAnswerPrevQuestion'),
 					true
 				);
 			}
@@ -84,7 +84,7 @@ const AdminHandlers = {
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, false);
 
 			return ctx.answerCbQuery(
-				Texts.getText('invalidAnswer'),
+				Texts.getText('quiz.invalidAnswer'),
 				true
 			);
 		});
@@ -94,7 +94,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('timeIsOver'),
+					Texts.getText('poll.timeIsOver'),
 					true
 				);
 			}
@@ -110,7 +110,7 @@ const AdminHandlers = {
 			await addPollResult(pollId, ctx.from.id, true);
 
 			return ctx.answerCbQuery(
-				Texts.getText('validAnswer'),
+				Texts.getText('poll.validAnswer'),
 				true
 			);
 		});
@@ -120,7 +120,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('timeIsOver'),
+					Texts.getText('poll.timeIsOver'),
 					true
 				);
 			}
@@ -136,7 +136,7 @@ const AdminHandlers = {
 			await addPollResult(pollId, ctx.from.id, false);
 
 			return ctx.answerCbQuery(
-				Texts.getText('invalidAnswer'),
+				Texts.getText('poll.invalidAnswer'),
 				true
 			);
 		});

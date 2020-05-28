@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IPoll {
-	answerTime: number;
+	answerTime?: number;
 	image: string;
 	answers: [
 		{
@@ -16,7 +16,7 @@ export interface IMongoosePoll extends IPoll, Document {}
 
 // Схема пользователя
 export const PollSchema: Schema = new Schema({
-	answerTime: { type: Number, required: true },
+	answerTime: { type: Number },
 	image: { type: String, required: true },
 	answers: [
 		{
