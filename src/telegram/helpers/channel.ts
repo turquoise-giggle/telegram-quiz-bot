@@ -3,7 +3,7 @@ import Channel from '../models/channel';
 import QuizStatusType from '../../enums/QuizStatusType';
 import AnswerType from '../../enums/AnswerType';
 import { getAnswersKeyboard } from './keyboards';
-import { getQuizIntroMessage } from './messages';
+import { getQuizIntroMessage, getQuizMessage } from './messages';
 import { countWinnersByQuizId, updateQuizResultSuccessByFilter } from '../../helpers/quizResults';
 import { getPollById } from '../../helpers/polls';
 import { getQuizById, updateQuizStatus } from '../../helpers/quizes';
@@ -38,6 +38,8 @@ export async function postQuiz(quizId: string) {
 	}
 
 	const bot = Bot.getBot();
+
+	await bot.telegram.sendMessage(461738219, getQuizMessage(quiz));
 
 	const { name, prize, answerTime, interval, questions } = quiz;
 
