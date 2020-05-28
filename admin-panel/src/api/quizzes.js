@@ -5,8 +5,8 @@ export const fetchQuizzes = async () => {
   return data.quizes;
 };
 
-export const createQuiz = async ({ name, prize, answerTime, questions }) => {
-  const { data } = await api.post('/quiz/create', { name, prize, answerTime, questions });
+export const createQuiz = async ({ name, prize, answerTime, questions, interval }) => {
+  const { data } = await api.post('/quiz/create', { name, prize, answerTime, questions, interval });
   return data.id;
 };
 

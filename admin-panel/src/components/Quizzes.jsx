@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button, message, Table } from 'antd';
+import { Badge, Button, InputNumber, message, Row, Table } from 'antd';
 import { DeleteFilled, DownloadOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { deleteQuizzes, fetchQuizzes } from '../api/quizzes';
 import { withRouter } from 'react-router';
@@ -55,7 +55,8 @@ class Quizzes extends React.Component {
 
   updateData = async () => {
 	try {
-	  const data = await fetchQuizzes();
+	  const [data] = await Promise.all([fetchQuizzes()]);
+
 	  this.setState({
 		data: data.map((item) => {
 		  return {
@@ -63,7 +64,7 @@ class Quizzes extends React.Component {
 			statusText: item.status === 0
 				? <Badge status="processing" text="Проходит"/>
 				: <Badge status="success" text="Завершена"/>,
-			report: <Button type="dashed" icon={<DownloadOutlined/>}
+			report: <Button type="dashed" icon={<DownloadOutlined/>} disabled={item.status === 0}
 							href={`${apiURL}/quiz/results/read?id=${item.id}`}/>,
 			key: item.id
 		  };
@@ -111,19 +112,21 @@ class Quizzes extends React.Component {
 
 	return (
 		<div>
-		  <div style={{ marginBottom: 16, display: !hasSelected ? 'block' : 'none' }}>
-			<Button type="primary" icon={<PlusCircleFilled/>} onClick={this.onCreateClicked}>
-			  Создать
-			</Button>
-		  </div>
-		  <div style={{ marginBottom: 16, display: hasSelected ? 'block' : 'none' }}>
-			<Button type="danger" icon={<DeleteFilled/>} onClick={this.onDeleteClicked}>
-			  Удалить
-			</Button>
-			<span style={{ marginLeft: 8 }}>
-		  	{hasSelected ? `Выбрано ${selectedRowKeys.length} викторин(а)` : ''}
-		  </span>
-		  </div>
+		  <Row>
+			<div style={{ marginBottom: 16, display: !hasSelected ? 'block' : 'none' }}>
+			  <Button type="primary" icon={<PlusCircleFilled/>} onClick={this.onCreateClicked}>
+				Создать
+			  </Button>
+			</div>
+			<div style={{ marginBottom: 16, display: hasSelected ? 'block' : 'none' }}>
+			  <Button type="danger" icon={<DeleteFilled/>} onClick={this.onDeleteClicked}>
+				Удалить
+			  </Button>
+			  <span style={{ marginLeft: 8 }}>
+		  		{hasSelected ? `Выбрано ${selectedRowKeys.length} викторин(а)` : ''}
+			  </span>
+			</div>
+		  </Row>
 
 		  <Table loading={this.state.loading}
 				 rowSelection={rowSelection}

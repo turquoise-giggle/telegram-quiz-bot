@@ -1,17 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
-import Login from './Login';
-import Dashboard from './Dashboard';
+import { BrowserRouter } from 'react-router-dom';
 import { checkAuth } from '../api/auth';
-import NotFound from './NotFound';
-import { Redirect, Switch } from 'react-router';
 import '../styles/App.css';
-import ProtectedRoute from './ProtectedRoute';
 import Loading from './Loading';
-import Quizzes from './Quizzes';
-import CreateQuiz from './CreateQuiz';
-import Polls from './Polls';
-import CreatePoll from './CreatePoll';
+import Router from './Router';
 
 class App extends React.Component {
   state = {
@@ -32,33 +24,7 @@ class App extends React.Component {
 	return (
 		<BrowserRouter>
 		  <div className="App">
-			<Switch>
-			  <ProtectedRoute exact path="/" authorized={this.state.authorized} component={() => (
-				  <Redirect to="/quizzes"/>
-			  )}/>
-			  <ProtectedRoute exact path="/quizzes" authorized={this.state.authorized} component={() =>
-				  <Dashboard>
-					<Quizzes />
-				  </Dashboard>
-			  }/>
-			  <ProtectedRoute exact path="/createquiz" authorized={this.state.authorized} component={() =>
-				  <Dashboard>
-					<CreateQuiz />
-				  </Dashboard>
-			  }/>
-			  <ProtectedRoute exact path="/polls" authorized={this.state.authorized} component={() =>
-				  <Dashboard>
-					<Polls />
-				  </Dashboard>
-			  }/>
-			  <ProtectedRoute exact path="/createpoll" authorized={this.state.authorized} component={() =>
-				  <Dashboard>
-					<CreatePoll />
-				  </Dashboard>
-			  }/>
-			  <Route exact path="/login" component={Login}/>
-			  <Route component={NotFound}/>
-			</Switch>
+			<Router authorized={this.state.authorized}/>
 		  </div>
 		</BrowserRouter>
 	);

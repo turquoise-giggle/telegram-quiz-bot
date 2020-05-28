@@ -32,7 +32,7 @@ const columns = [
   {
 	title: 'Время на ответ',
 	dataIndex: 'answerTime',
-	render: (text, record) => `${record.answerTime} с`,
+	render: (text, record) => `${record.answerTime / 60} мин`,
 	responsive: ['md']
   }
 ];
@@ -64,10 +64,10 @@ class Polls extends React.Component {
 
   updateData = async () => {
 	try {
-	  const [data, postingIntervalInMs] = await Promise.all([fetchPolls(), fetchInterval()]);
+	  const [data, postingIntervalInSec] = await Promise.all([fetchPolls(), fetchInterval()]);
 
 	  this.setState({
-		postingInterval: postingIntervalInMs / 1000,
+		postingInterval: postingIntervalInSec / 60,
 		data: data.map((item) => {
 		  return { ...item, key: item.id };
 		})
@@ -112,9 +112,9 @@ class Polls extends React.Component {
 
 	  const timeout = setTimeout(() => {
 		if (interval > 0) {
-		  updateInterval(this.state.postingInterval * 1000)
+		  updateInterval(this.state.postingInterval * 60)
 		}
-	  }, 3000);
+	  }, 2000);
 
 	  this.setState({ intervalSavingTimeout: timeout });
 	}
@@ -144,6 +144,7 @@ class Polls extends React.Component {
 					  okText="Да"
 					  cancelText="Отменить"
 					  onConfirm={this.onDeleteClicked}
+					  onEnterPressed={this.onDeleteClicked}
 					  icon={<QuestionCircleOutlined style={{ color: 'red' }}/>}
 				  >
 					<Button type="danger" icon={<DeleteFilled/>}>
@@ -176,7 +177,7 @@ class Polls extends React.Component {
 				style={{ width: 50, marginLeft: 5, marginRight: 5 }}
 				onChange={this.onIntervalChanged}
 			/>
-			<span style={{ marginRight: 20 }}>сек.</span>
+			<span style={{ marginRight: 20 }}>мин.</span>
 		  </Row>
 
 		  <h1 style={{ marginTop: 15 }}>Будущие опросы</h1>
