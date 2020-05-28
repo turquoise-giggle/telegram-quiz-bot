@@ -1,6 +1,7 @@
 import adminPanelHandlers from '../handlers/adminPanel';
 import pollsHandlers from '../handlers/polls';
 import quizesHandlers from '../handlers/quizes';
+import textsHandlers from '../handlers/texts';
 
 const Routes = {
 	isInit: false,
@@ -44,6 +45,10 @@ const Routes = {
 		router.get('/api/quiz/post', this.getAuthCheckedHandler(quizesHandlers.quiz.post));
 		router.get('/api/quiz/results/read', this.getAuthCheckedHandler(quizesHandlers.results.read));
 		
+		/*** Texts ***/
+		router.get('/api/texts/read', textsHandlers.read);
+		router.post('/api/texts/update', textsHandlers.update);
+
 		/*** Admin panel ***/
 		router.get('/api/auth/check', adminPanelHandlers.auth.check);
 		router.post('/api/auth/login', adminPanelHandlers.auth.login);

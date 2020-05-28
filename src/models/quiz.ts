@@ -6,6 +6,7 @@ export interface IQuiz {
 	prize: string;
 	status?: QuizStatusType;
 	answerTime: number;
+	interval: number;
 	questions: [
 		{
 			image: string;
@@ -31,6 +32,7 @@ export const QuizSchema: Schema = new Schema({
 		default: () => QuizStatusType.IN_PROCESS
 	},
 	answerTime: { type: Number, required: true },
+	interval: { type: Number, required: true },
 	questions: {
 		type: [
 			{

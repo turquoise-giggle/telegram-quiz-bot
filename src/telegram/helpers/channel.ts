@@ -38,7 +38,7 @@ export async function postQuiz(quizId: string) {
 
 	const bot = Bot.getBot();
 
-	const { name, prize, answerTime, questions } = quiz;
+	const { name, prize, answerTime, interval, questions } = quiz;
 
 	const quizIntroMessage = getQuizIntroMessage(name, prize, answerTime);
 
@@ -46,24 +46,22 @@ export async function postQuiz(quizId: string) {
 		parse_mode: 'HTML'
 	});
 
-	const answerTimeMilis = answerTime * 1e3;
-
 	setTimeout(
 		postNextQuizQuestion,
 		TIMEOUT_AFTER_INTRO,
 		bot,
 		channel,
-		answerTimeMilis,
 		questions,
 		quizId
 	);
 }
 
-export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questions, quizId, prevTerm?) {
+export async function postNextQuizQuestion(bot, channel, questions, quizId, prevTerm?) {
 	if (!questions.length) {
 		await updateQuizResultSuccessByFilter(
 			{
 				quizId,
+				success: true,
 				lastAnswerTerm: { $lt: prevTerm }
 			},
 			false
@@ -75,6 +73,11 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 			parse_mode: 'HTML'
 		});
 	} else {
+		const quiz = await getQuizById(quizId);
+		const { answerTime, interval } = quiz;
+		const answerTimeMilis = answerTime * 1e3;
+		const intervalMilis = interval * 1e3;
+
 		const question = questions.shift();
 		const term = await postQuestion(
 			bot,
@@ -89,10 +92,9 @@ export async function postNextQuizQuestion(bot, channel, answerTimeMilis, questi
 		);
 		setTimeout(
 			postNextQuizQuestion,
-			answerTimeMilis,
+			intervalMilis,
 			bot,
 			channel,
-			answerTimeMilis,
 			questions,
 			quizId,
 			term

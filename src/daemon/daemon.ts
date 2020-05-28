@@ -16,14 +16,18 @@ const Daemon = {
 		const postNewPollIntervalVar =
 			await getVar('postNewPollInterval') ||
 			await updateVar('postNewPollInterval', DEFAULT_POST_NEW_POLL_INTERVAL);
-		this.postNewPollInterval = setInterval(this.postNewPoll, postNewPollIntervalVar.value);
+
+		const intervalTimeMilis = postNewPollIntervalVar.value * 1e3;
+		
+		this.postNewPollInterval = setInterval(this.postNewPoll, intervalTimeMilis);
 
 		console.log('>>> Daemon инициализирован');
 	},
 	setPostNewPollIntervalTime: async function(intervalTime: number) {
 		await updateVar('postNewPollInterval', intervalTime);
+		const intervalTimeMilis = intervalTime * 1e3;
 		clearInterval(this.postNewPollInterval);
-		this.postNewPollInterval = setInterval(this.postNewPoll, intervalTime);
+		this.postNewPollInterval = setInterval(this.postNewPoll, intervalTimeMilis);
 	}
 };
 

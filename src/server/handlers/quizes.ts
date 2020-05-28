@@ -15,9 +15,10 @@ const handlers = {
 				name,
 				prize,
 				answerTime,
+				interval,
 				questions
 			} = ctx.request.body;
-			if (!name || !prize || !answerTime || !questions || !questions.length) {
+			if (!name || !prize || !answerTime || !interval || !questions || !questions.length) {
 				return (ctx.status = 400);
 			}
 			try {
@@ -25,6 +26,7 @@ const handlers = {
 					name,
 					prize,
 					answerTime,
+					interval,
 					questions
 				});
 				ctx.status = 200;

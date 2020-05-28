@@ -1,5 +1,6 @@
 import { Markup, Stage } from 'telegraf';
 import StartMessage from '../controllers/start';
+import Texts from '../../texts/texts';
 import { getQuizResult, updateQuizResultSuccess } from '../../helpers/quizResults';
 import { getPollResult, addPollResult } from '../../helpers/pollResults';
 
@@ -12,7 +13,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					'К сожалению, время на ответ истекло ⌛',
+					Texts.getText('timeIsOver'),
 					true
 				);
 			}
@@ -26,14 +27,14 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					'К сожалению, вы не можете продолжить викторину.\nВы ответили неверно на один из предыдущих вопросов ❌',
+					Texts.getText('invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					'К сожалению, вы не можете продолжить викторину.\nВы не ответили на один из предыдущих вопросов ❌',
+					Texts.getText('noAnswerPrevQuestion'),
 					true
 				);
 			}
@@ -42,7 +43,7 @@ const AdminHandlers = {
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, true);
 
 			return ctx.answerCbQuery(
-				'Выбран правильный ответ ✅',
+				Texts.getText('validAnswer'),
 				true
 			);
 		});
@@ -53,7 +54,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					'К сожалению, время на ответ истекло ⌛',
+					Texts.getText('timeIsOver'),
 					true
 				);
 			}
@@ -67,14 +68,14 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					'К сожалению, вы не можете продолжить викторину.\nВы ответили неверно на один из предыдущих вопросов ❌',
+					Texts.getText('invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					'К сожалению, вы не можете продолжить викторину.\nВы не ответили на один из предыдущих вопросов ❌',
+					Texts.getText('noAnswerPrevQuestion'),
 					true
 				);
 			}
@@ -83,7 +84,7 @@ const AdminHandlers = {
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, false);
 
 			return ctx.answerCbQuery(
-				'Выбран неправильный ответ ❌',
+				Texts.getText('invalidAnswer'),
 				true
 			);
 		});
@@ -93,7 +94,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					'К сожалению, время на ответ истекло ⌛',
+					Texts.getText('timeIsOver'),
 					true
 				);
 			}
@@ -109,7 +110,7 @@ const AdminHandlers = {
 			await addPollResult(pollId, ctx.from.id, true);
 
 			return ctx.answerCbQuery(
-				'Выбран правильный ответ ✅',
+				Texts.getText('validAnswer'),
 				true
 			);
 		});
@@ -119,7 +120,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					'К сожалению, время на ответ истекло ⌛',
+					Texts.getText('timeIsOver'),
 					true
 				);
 			}
@@ -135,7 +136,7 @@ const AdminHandlers = {
 			await addPollResult(pollId, ctx.from.id, false);
 
 			return ctx.answerCbQuery(
-				'Выбран неправильный ответ ❌',
+				Texts.getText('invalidAnswer'),
 				true
 			);
 		});
