@@ -1,18 +1,41 @@
 import { Markup } from 'telegraf';
-import AnswerType from '../../enums/AnswerType';
 
-export function getAnswersKeyboard(answers, term: number, answerType: AnswerType, id: string, prevTerm: number = 0) {
-	const validCallback = answerType === AnswerType.QUIZ_ANSWER
-		? `validQuiz>${id}>${term}>${prevTerm}`
-		: `validPoll>${id}>${term}`;
-	const invalidCallback = answerType === AnswerType.QUIZ_ANSWER
-		? `invalidQuiz>${id}>${term}>${prevTerm}`
-		: `invalidPoll>${id}>${term}`;
+export function getPollAnswersKeyboard(
+	answers,
+	params: {
+		term: number,
+		id: string
+	}
+) {
+	const { term, id } = params;
+	const validCallback = `validPoll>${id}>${term}`;
+	const invalidCallback = `invalidPoll>${id}>${term}`;
 	const buttons = answers.map((answer) => {
 		return Markup.callbackButton(
 			answer.text,
 			answer.isValid ? validCallback : invalidCallback
 		);
 	});
-	return Markup.inlineKeyboard(buttons, { columns: 2});
+	return Markup.inlineKeyboard(buttons, { columns: 2 });
+}
+
+export function getQuizAnswersKeyboard(
+	answers,
+	params: {
+		term: number,
+		id: string,
+		prevTerm: number,
+		questionCounter: number
+	}
+) {
+	const { term, id, prevTerm, questionCounter } = params;
+	const validCallback = `validQuiz>${id}>${term}>${prevTerm}>${questionCounter}`;
+	const invalidCallback = `invalidQuiz>${id}>${term}>${prevTerm}>${questionCounter}`;
+	const buttons = answers.map((answer) => {
+		return Markup.callbackButton(
+			answer.text,
+			answer.isValid ? validCallback : invalidCallback
+		);
+	});
+	return Markup.inlineKeyboard(buttons, { columns: 2 });
 }

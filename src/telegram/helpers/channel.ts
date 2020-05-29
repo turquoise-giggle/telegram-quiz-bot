@@ -2,7 +2,7 @@ import Bot from '../';
 import Channel from '../models/channel';
 import QuizStatusType from '../../enums/QuizStatusType';
 import AnswerType from '../../enums/AnswerType';
-import { getAnswersKeyboard } from './keyboards';
+import { getQuizAnswersKeyboard, getPollAnswersKeyboard } from './keyboards';
 import { getQuizIntroMessage, getQuizMessage } from './messages';
 import { countWinnersByQuizId, updateQuizResultSuccessByFilter } from '../../helpers/quizResults';
 import { getPollById } from '../../helpers/polls';
@@ -59,8 +59,10 @@ export async function postQuiz(quizId: string) {
 	);
 }
 
-export async function postNextQuizQuestion(bot, channel, questions, quizId, prevTerm?) {
+export async function postNextQuizQuestion(bot, channel, questions, quizId, prevTerm: number = 0) {
 	if (!questions.length) {
+		// All who didn't answer all questions
+		// success to false (not winner)
 		await updateQuizResultSuccessByFilter(
 			{
 				quizId,
@@ -69,7 +71,9 @@ export async function postNextQuizQuestion(bot, channel, questions, quizId, prev
 			},
 			false
 		);
+		// Update status of the quiz
 		await updateQuizStatus(quizId, QuizStatusType.FINISHED);
+		// Final message
 		const numberOfWinners = await countWinnersByQuizId(quizId);
 		const message = `Викторина <b>завершена</b>! Количество победителей: ${numberOfWinners} пользователей`;
 		await bot.telegram.sendMessage(channel.chatId, message, {
@@ -77,24 +81,34 @@ export async function postNextQuizQuestion(bot, channel, questions, quizId, prev
 		});
 	} else {
 		const quiz = await getQuizById(quizId);
+		// Count intervals
 		const { answerTime, interval } = quiz;
 		const answerTimeMilis = answerTime * 1e3;
 		const intervalMilis = interval
 			? interval * 1e3
 			: answerTimeMilis;
-
+		// Get index of the question
+		const questionCounter = quiz.questions.length - questions.length;
+		// Get next question
 		const question = questions.shift();
-		const term = await postQuestion(
-			bot,
-			channel,
+		
+		const term = Date.now() + answerTimeMilis;
+		const { image, answers } = question;
+		const keyboard = getQuizAnswersKeyboard(
+			answers,
 			{
-				question,
-				answerTimeMilis,
-				answerType: AnswerType.QUIZ_ANSWER,
+				term,
 				id: quizId,
-				prevTerm
+				prevTerm,
+				questionCounter
 			}
 		);
+
+		await bot.telegram.sendPhoto(channel.chatId, image, {
+			reply_markup: keyboard
+		});
+
+		// Post next question timeout
 		setTimeout(
 			postNextQuizQuestion,
 			intervalMilis,
@@ -105,30 +119,6 @@ export async function postNextQuizQuestion(bot, channel, questions, quizId, prev
 			term
 		);
 	}
-}
-
-export async function postQuestion(bot, channel, params: {
-	question: any,
-	answerTimeMilis: number,
-	answerType: AnswerType,
-	id: string,
-	prevTerm?: number
-}) {
-	const { question, answerTimeMilis, answerType, id, prevTerm } = params;
-	const { image, answers } = question;
-
-	if (!image || !answers || !answers.length) {
-		throw new Error("Invalid question data");
-	}
-
-	const term = Date.now() + answerTimeMilis;
-	const keyboard = getAnswersKeyboard(answers, term, answerType, id, prevTerm);
-
-	await bot.telegram.sendPhoto(channel.chatId, image, {
-		reply_markup: keyboard
-	});
-
-	return term;
 }
 
 export async function postPoll(pollId: string) {
@@ -150,17 +140,16 @@ export async function postPoll(pollId: string) {
 		? answerTime * 1e3
 		: ONE_YEAR_MILIS;
 
-	await postQuestion(
-		bot,
-		channel,
+	const term = Date.now() + answerTimeMilis;
+	const keyboard = getPollAnswersKeyboard(
+		answers,
 		{
-			question: {
-				image,
-				answers
-			},
-			answerTimeMilis,
-			answerType: AnswerType.POLL_ANSWER,
+			term,
 			id: pollId
-		},
+		}
 	);
+
+	await bot.telegram.sendPhoto(channel.chatId, image, {
+		reply_markup: keyboard
+	});
 }

@@ -20,6 +20,7 @@ const AdminHandlers = {
 			const quizId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 			const prevTerm = +ctx.callbackQuery.data.split('>')[3];
+			const questionCounter = +ctx.callbackQuery.data.split('>')[4];
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
@@ -54,15 +55,17 @@ const AdminHandlers = {
 
 			const quiz = await getQuizById(quizId);
 
-			return ctx.answerCbQuery(
-				Texts.getText('quiz.validAnswer'),
-				true
-			);
+			const message = quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.validAnswer
+				? quiz.questions[questionCounter].texts.validAnswer
+				: VALID_ANSWER_QUIZ_DEFAULT;
+
+			return ctx.answerCbQuery(message, true);
 		});
 		bot.action(/^invalidQuiz>/, async (ctx) => {
 			const quizId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 			const prevTerm = +ctx.callbackQuery.data.split('>')[3];
+			const questionCounter = +ctx.callbackQuery.data.split('>')[4];
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
@@ -97,10 +100,11 @@ const AdminHandlers = {
 
 			const quiz = await getQuizById(quizId);
 
-			return ctx.answerCbQuery(
-				Texts.getText('quiz.invalidAnswer'),
-				true
-			);
+			const message = quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.invalidAnswer
+				? quiz.questions[questionCounter].texts.invalidAnswer
+				: INVALID_ANSWER_QUIZ_DEFAULT;
+
+			return ctx.answerCbQuery(message, true);
 		});
 		bot.action(/^validPoll>/, async (ctx) => {
 			const pollId = ctx.callbackQuery.data.split('>')[1];
