@@ -19,7 +19,8 @@ const handlers = {
 			const {
 				answerTime,
 				image,
-				answers
+				answers,
+				texts
 			} = ctx.request.body;
 			if (!image || !answers || !answers.length) {
 				return (ctx.status = 400);
@@ -28,7 +29,8 @@ const handlers = {
 				const poll = await addPoll({
 					answerTime,
 					image,
-					answers
+					answers,
+					texts
 				});
 				ctx.status = 200;
 				ctx.body = {

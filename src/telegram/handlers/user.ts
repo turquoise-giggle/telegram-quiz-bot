@@ -3,6 +3,16 @@ import StartMessage from '../controllers/start';
 import Texts from '../../texts/texts';
 import { getQuizResult, updateQuizResultSuccess } from '../../helpers/quizResults';
 import { getPollResult, addPollResult } from '../../helpers/pollResults';
+import {
+	getQuizById,
+	VALID_ANSWER_QUIZ_DEFAULT,
+	INVALID_ANSWER_QUIZ_DEFAULT
+} from '../../helpers/quizes';
+import {
+	getPollById,
+	VALID_ANSWER_POLL_DEFAULT,
+	INVALID_ANSWER_POLL_DEFAULT
+} from '../../helpers/polls';
 
 const AdminHandlers = {
 	init: (bot) => {
@@ -41,6 +51,8 @@ const AdminHandlers = {
 			
 			// Set success to true
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, true);
+
+			const quiz = await getQuizById(quizId);
 
 			return ctx.answerCbQuery(
 				Texts.getText('quiz.validAnswer'),
@@ -83,6 +95,8 @@ const AdminHandlers = {
 			// Set success to false at this quiz
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, false);
 
+			const quiz = await getQuizById(quizId);
+
 			return ctx.answerCbQuery(
 				Texts.getText('quiz.invalidAnswer'),
 				true
@@ -109,8 +123,10 @@ const AdminHandlers = {
 			// Set success to true
 			await addPollResult(pollId, ctx.from.id, true);
 
+			const poll = await getPollById(pollId);
+
 			return ctx.answerCbQuery(
-				Texts.getText('poll.validAnswer'),
+				poll.texts.validAnswer || VALID_ANSWER_POLL_DEFAULT,
 				true
 			);
 		});
@@ -135,8 +151,10 @@ const AdminHandlers = {
 			// Set success to true
 			await addPollResult(pollId, ctx.from.id, false);
 
+			const poll = await getPollById(pollId);
+
 			return ctx.answerCbQuery(
-				Texts.getText('poll.invalidAnswer'),
+				poll.texts.invalidAnswer || INVALID_ANSWER_POLL_DEFAULT,
 				true
 			);
 		});

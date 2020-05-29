@@ -1,5 +1,8 @@
 import Poll, { IPoll } from '../models/poll';
 
+export const VALID_ANSWER_POLL_DEFAULT = 'Выбран верный ответ ✅';
+export const INVALID_ANSWER_POLL_DEFAULT = 'Выбран неверный ответ ❌';
+
 export async function addPoll(pollData: IPoll) {
 	const poll = new Poll(pollData);
 	const lowestPriorityPoll = await getLowestPriorityPoll();

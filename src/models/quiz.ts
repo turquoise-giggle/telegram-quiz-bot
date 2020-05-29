@@ -1,5 +1,9 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import QuizStatusType from '../enums/QuizStatusType';
+import {
+	VALID_ANSWER_QUIZ_DEFAULT,
+	INVALID_ANSWER_QUIZ_DEFAULT
+} from '../helpers/quizes';
 
 export interface IQuiz {
 	name: string;
@@ -16,6 +20,10 @@ export interface IQuiz {
 					isValid?: boolean;
 				}
 			];
+			texts: {
+				validAnswer: string;
+				invalidAnswer: string;
+			};
 		}
 	];
 }
@@ -42,7 +50,18 @@ export const QuizSchema: Schema = new Schema({
 						text: { type: String, required: true },
 						isValid: { type: Boolean }
 					}
-				]
+				],
+				texts: {
+					type: {
+						validAnswer: String,
+						invalidAnswer: String
+					},
+					required: true,
+					default: {
+						validAnswer: { type: String, required: true, default: () => VALID_ANSWER_QUIZ_DEFAULT },
+						invalidAnswer: { type: String, required: true, default: () => INVALID_ANSWER_QUIZ_DEFAULT }
+					}
+				}
 			}
 		]
 	}

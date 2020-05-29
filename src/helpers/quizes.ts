@@ -1,6 +1,9 @@
 import Quiz, { IQuiz } from '../models/quiz';
 import QuizStatusType from '../enums/QuizStatusType';
 
+export const VALID_ANSWER_QUIZ_DEFAULT = 'Выбран верный ответ ✅';
+export const INVALID_ANSWER_QUIZ_DEFAULT = 'Выбран неверный ответ ❌';
+
 export async function addQuiz(quizData: IQuiz) {
 	const quiz = new Quiz(quizData);
 	return quiz.save();
