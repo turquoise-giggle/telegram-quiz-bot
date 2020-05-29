@@ -5,8 +5,8 @@ export const fetchPolls = async () => {
   return data.polls;
 };
 
-export const createPoll = async ({ answerTime, image, answers }) => {
-  await api.post('/poll/create', { answerTime, image, answers });
+export const createPoll = async ({ answerTime, image, answers, texts }) => {
+  await api.post('/poll/create', { answerTime, image, answers, texts });
 };
 
 export const updatePoll = async ({ id, answerTime, answers }) => {

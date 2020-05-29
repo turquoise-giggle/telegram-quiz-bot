@@ -24,7 +24,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.timeIsOver'),
+					await Texts.getText('quiz.timeIsOver'),
 					true
 				);
 			}
@@ -38,18 +38,18 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.invalidPrevQuestion'),
+					await Texts.getText('quiz.invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.noAnswerPrevQuestion'),
+					await Texts.getText('quiz.noAnswerPrevQuestion'),
 					true
 				);
 			}
-			
+
 			// Set success to true
 			await updateQuizResultSuccess(quizId, ctx.from.id, term, true);
 
@@ -69,7 +69,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.timeIsOver'),
+					await Texts.getText('quiz.timeIsOver'),
 					true
 				);
 			}
@@ -83,14 +83,14 @@ const AdminHandlers = {
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.invalidPrevQuestion'),
+					await Texts.getText('quiz.invalidPrevQuestion'),
 					true
 				);
 			}
 			// User didn't answered one of the previous questions
 			if ((!quizResult && prevTerm) || (quizResult && quizResult.lastAnswerTerm !== prevTerm)) {
 				return ctx.answerCbQuery(
-					Texts.getText('quiz.noAnswerPrevQuestion'),
+					await Texts.getText('quiz.noAnswerPrevQuestion'),
 					true
 				);
 			}
@@ -112,7 +112,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('poll.timeIsOver'),
+					await Texts.getText('poll.timeIsOver'),
 					true
 				);
 			}
@@ -123,7 +123,7 @@ const AdminHandlers = {
 			if (pollResult) {
 				return ctx.answerCbQuery();
 			}
-			
+
 			// Set success to true
 			await addPollResult(pollId, ctx.from.id, true);
 
@@ -140,7 +140,7 @@ const AdminHandlers = {
 
 			if (term < Date.now()) {
 				return ctx.answerCbQuery(
-					Texts.getText('poll.timeIsOver'),
+					await Texts.getText('poll.timeIsOver'),
 					true
 				);
 			}
@@ -151,7 +151,7 @@ const AdminHandlers = {
 			if (pollResult) {
 				return ctx.answerCbQuery();
 			}
-			
+
 			// Set success to true
 			await addPollResult(pollId, ctx.from.id, false);
 

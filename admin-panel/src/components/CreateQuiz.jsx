@@ -23,7 +23,11 @@ const initialState = {
 		text: '',
 		isValid: true
 	  }
-	]
+	],
+	texts: {
+	  validAnswer: 'Правильно ✅',
+	  invalidAnswer: 'Неправильно ❌'
+	}
   }],
   showSuccess: false
 };
@@ -56,7 +60,11 @@ class CreateQuiz extends React.Component {
 		  text: '',
 		  isValid: true
 		}
-	  ]
+	  ],
+	  texts: {
+		validAnswer: 'Правильно ✅',
+		invalidAnswer: 'Неправильно ❌'
+	  }
 	});
 
 	this.setState({ questions });
@@ -112,6 +120,15 @@ class CreateQuiz extends React.Component {
 
 	  this.setState({ questions });
 	}
+  };
+
+  onNotificationTextChanged = (questionKey, textKey, value) => {
+	const { questions } = this.state;
+	const question = questions.find(q => q.key === questionKey);
+
+	question.texts[textKey] = value;
+
+	this.setState({ questions });
   };
 
   uploadFile = async ({ questionKey, file, onSuccess, onError }) => {
@@ -187,7 +204,8 @@ class CreateQuiz extends React.Component {
 		questions.length > 0 &&
 		questions.every(q => q.image && q.answers.length > 1 &&
 			q.answers.every(a => a.text && a.text.length) &&
-			q.answers.some(a => a.isValid)
+			q.answers.some(a => a.isValid) &&
+			Object.keys(q.texts).every(key => q.texts[key] && q.texts[key].length)
 		)
 	);
   };
@@ -208,8 +226,10 @@ class CreateQuiz extends React.Component {
 				className="CreateQuizForm"
 				onFinish={this.onFormSubmit}
 				initialValues={{
-				  answerTime: 30,
-				  interval: 0
+				  'answerTime': 30,
+				  'interval': 0,
+				  'texts.validAnswer': 'Правильно ✅',
+				  'texts.invalidAnswer': 'Неправильно ❌'
 				}}
 				visible={this.state.showSuccess.toString()}
 			>
@@ -308,7 +328,7 @@ class CreateQuiz extends React.Component {
 						  </Button>
 						</Upload>
 
-						<div style={{ marginTop: 5 }}>
+						<div style={{ marginTop: 10 }}>
 						  <label>Варианты ответа:</label>
 						  <Button
 							  type="link"
@@ -341,6 +361,21 @@ class CreateQuiz extends React.Component {
 							);
 						  })}
 						</Radio.Group>
+
+						<div className="NotificationTexts" style={{ marginTop: 10 }}>
+						  <div style={{ marginBottom: 10 }}>
+							<label>После прав. ответа: </label>
+							<Input value={question.texts.validAnswer} onChange={
+							  (e) => this.onNotificationTextChanged(question.key, 'validAnswer', e.target.value)}
+							/>
+						  </div>
+						  <div>
+							<label>После неправ. ответа: </label>
+							<Input value={question.texts.invalidAnswer} onChange={
+							  (e) => this.onNotificationTextChanged(question.key, 'invalidAnswer', e.target.value)}
+							/>
+						  </div>
+						</div>
 					  </Collapse.Panel>
 				  );
 				})}

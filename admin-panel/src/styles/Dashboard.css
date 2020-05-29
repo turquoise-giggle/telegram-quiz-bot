@@ -18,3 +18,11 @@
 .SignOutButton {
     margin: 0 10px 0 20px;
 }
+
+.NotificationTexts label {
+  display: block;
+}
+
+.NotificationTexts input {
+  min-width: 285px;
+}
