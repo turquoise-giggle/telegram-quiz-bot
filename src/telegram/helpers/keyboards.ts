@@ -29,8 +29,8 @@ export function getQuizAnswersKeyboard(
 	}
 ) {
 	const { term, id, prevTerm, questionCounter } = params;
-	const validCallback = `validQuiz>${id}>${term}>${prevTerm}>${questionCounter}`;
-	const invalidCallback = `invalidQuiz>${id}>${term}>${prevTerm}>${questionCounter}`;
+	const validCallback = `vQ>${id}>${term}>${prevTerm}>${questionCounter}`;
+	const invalidCallback = `invQ>${id}>${term}>${prevTerm}>${questionCounter}`;
 	const buttons = answers.map((answer) => {
 		return Markup.callbackButton(
 			answer.text,

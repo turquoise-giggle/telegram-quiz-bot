@@ -16,7 +16,7 @@ import {
 
 const AdminHandlers = {
 	init: (bot) => {
-		bot.action(/^validQuiz>/, async (ctx) => {
+		bot.action(/^vQ>/, async (ctx) => {
 			const quizId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 			const prevTerm = +ctx.callbackQuery.data.split('>')[3];
@@ -61,7 +61,7 @@ const AdminHandlers = {
 
 			return ctx.answerCbQuery(message, true);
 		});
-		bot.action(/^invalidQuiz>/, async (ctx) => {
+		bot.action(/^invQ>/, async (ctx) => {
 			const quizId = ctx.callbackQuery.data.split('>')[1];
 			const term = +ctx.callbackQuery.data.split('>')[2];
 			const prevTerm = +ctx.callbackQuery.data.split('>')[3];
