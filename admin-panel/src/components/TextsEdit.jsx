@@ -42,6 +42,8 @@ class TextsEdit extends React.Component {
 	  }
 	}
 
+	console.log(texts);
+
 	try {
 	  await updateTexts(texts);
 	  message.success('Тексты успешно изменены');

@@ -32,7 +32,7 @@ const columns = [
   {
 	title: 'Время на ответ',
 	dataIndex: 'answerTime',
-	render: (text, record) => `${record.answerTime / 60} мин`,
+	render: (text, record) => record.answerTime ? `${record.answerTime / 60} мин` : 'Неограниченно',
 	responsive: ['md']
   }
 ];

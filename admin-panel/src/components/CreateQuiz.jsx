@@ -115,6 +115,12 @@ class CreateQuiz extends React.Component {
   };
 
   uploadFile = async ({ questionKey, file, onSuccess, onError }) => {
+	const sizeLimit = 5e+6;
+
+	if (file.size > sizeLimit) {
+	  return message.error('Максимальный размер 5MB');
+	}
+
 	try {
 	  const imageUrl = await uploadFile(file);
 
@@ -129,6 +135,7 @@ class CreateQuiz extends React.Component {
 	}
 	catch (err) {
 	  console.error(err);
+	  message.error('Не удалось загрузить картинку');
 	  onError();
 	}
   };

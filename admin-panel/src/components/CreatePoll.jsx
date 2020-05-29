@@ -57,8 +57,6 @@ class CreatePoll extends React.Component {
 	question.unlimitedAnswerTime = e.target.checked;
 
 	this.setState({ question });
-
-	console.log(this.state);
   };
 
   onAddAnswerClicked = () => {
@@ -105,6 +103,12 @@ class CreatePoll extends React.Component {
   };
 
   uploadFile = async ({ file, onSuccess, onError }) => {
+	const sizeLimit = 5e+6;
+
+	if (file.size > sizeLimit) {
+	  return message.error('Максимальный размер 5MB');
+	}
+
 	try {
 	  const imageUrl = await uploadFile(file);
 
@@ -208,7 +212,7 @@ class CreatePoll extends React.Component {
 				</div>
 
 				<div style={{ marginTop: 15 }}>
-				  <Checkbox checked={this.state.question.unlimitedAnswerTime} onChange={this.onAnswerTimeSwitched}>Неграниченное время ответа</Checkbox>
+				  <Checkbox checked={this.state.question.unlimitedAnswerTime} onChange={this.onAnswerTimeSwitched}>Неограниченное время ответа</Checkbox>
 				</div>
 
 				<div style={{ marginTop: 15 }}>
