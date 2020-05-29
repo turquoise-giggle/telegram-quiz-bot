@@ -91,8 +91,8 @@ export async function postNextQuizQuestion(bot, channel, questions, quizId, prev
 		const questionCounter = quiz.questions.length - questions.length;
 		// Get next question
 		const question = questions.shift();
-		
-		const term = Date.now() + answerTimeMilis;
+		// Store term in seconds (to save callbackQuery bytes)
+		const term = Math.trunc((Date.now() + answerTimeMilis) / 1e3);
 		const { image, answers } = question;
 		const keyboard = getQuizAnswersKeyboard(
 			answers,
