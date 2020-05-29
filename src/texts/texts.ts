@@ -2,7 +2,8 @@ import { getVar, updateVar } from '../helpers/vars';
 
 const Texts = {
 	getText: async function(name: string) {
-		return getVar(name);
+		const text = await getVar(name);
+		return text ? text.value : 'n/a';
 	},
 	setText: async function(name: string, value: string) {
 		return updateVar(name, value);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Badge, Button, InputNumber, message, Row, Table } from 'antd';
+import { Badge, Button, message, Row, Table } from 'antd';
 import { DeleteFilled, DownloadOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { deleteQuizzes, fetchQuizzes } from '../api/quizzes';
 import { withRouter } from 'react-router';

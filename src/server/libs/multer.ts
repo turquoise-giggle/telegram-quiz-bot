@@ -24,7 +24,7 @@ const upload = koaMulter({
 	},
 	limits: {
 		files: 1,
-		fileSize: 1024 * 1024 * 20 // 20 MB
+		fileSize: 1024 * 1024 * 5 // 5 MB
 	}
 }).fields([
 	{

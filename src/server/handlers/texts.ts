@@ -24,6 +24,7 @@ const handlers = {
 			const value = await Texts.getText(id);
 			ctx.status = 200;
 			ctx.body = {
+				name: id,
 				value
 			};
 		} catch (err) {

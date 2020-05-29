@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, InputNumber, message, Popconfirm, Row, Table, Dropdown, Menu } from 'antd';
+import { Button, Col, Dropdown, InputNumber, Menu, message, Popconfirm, Row, Table } from 'antd';
 import {
   DeleteFilled,
   DownloadOutlined,
@@ -10,7 +10,7 @@ import {
 import { withRouter } from 'react-router';
 import { deletePolls, fetchPolls } from '../api/polls';
 import { fetchInterval, updateInterval } from '../api/pollsInterval';
-import api, { apiURL } from '../api/api';
+import { apiURL } from '../api/api';
 
 const columns = [
   {
@@ -26,13 +26,14 @@ const columns = [
 	title: 'Варианты ответа',
 	dataIndex: 'answers',
 	render: (text, record) => (
-		record.answers.map((a, i) => <div key={i} style={{ color: a.isValid ? '#327926' : '#ef4949' }}>{i + 1}) {a.text}</div>)
+		record.answers.map((a, i) => <div key={i}
+										  style={{ color: a.isValid ? '#327926' : '#ef4949' }}>{i + 1}) {a.text}</div>)
 	)
   },
   {
 	title: 'Время на ответ',
 	dataIndex: 'answerTime',
-	render: (text, record) => `${record.answerTime / 60} мин`,
+	render: (text, record) => record.answerTime ? `${record.answerTime / 60} мин` : 'Неограниченно',
 	responsive: ['md']
   }
 ];
@@ -112,7 +113,7 @@ class Polls extends React.Component {
 
 	  const timeout = setTimeout(() => {
 		if (interval > 0) {
-		  updateInterval(this.state.postingInterval * 60)
+		  updateInterval(this.state.postingInterval * 60);
 		}
 	  }, 2000);
 
@@ -162,7 +163,7 @@ class Polls extends React.Component {
 			  <Row justify="end" align="middle">
 				<Dropdown overlay={ratingActions}>
 				  <Button type="primary">
-					<DownloadOutlined />Рейтинг <DownOutlined />
+					<DownloadOutlined/>Рейтинг <DownOutlined/>
 				  </Button>
 				</Dropdown>
 			  </Row>

@@ -63,22 +63,6 @@ class TextsEdit extends React.Component {
 			  <Col span={24}>
 				<h2>Викторины</h2>
 				<Form.Item
-					name="quiz.validAnswer"
-					label="Правильний ответ"
-					required
-				>
-				  <Input/>
-				</Form.Item>
-
-				<Form.Item
-					name="quiz.invalidAnswer"
-					label="Неправильный ответ"
-					required
-				>
-				  <Input/>
-				</Form.Item>
-
-				<Form.Item
 					name="quiz.timeIsOver"
 					label="Время вышло"
 					required
@@ -107,22 +91,6 @@ class TextsEdit extends React.Component {
 			<Row justify="left">
 			  <Col span={24}>
 				<h2>Опросы</h2>
-				<Form.Item
-					name="poll.validAnswer"
-					label="Правильний ответ"
-					required
-				>
-				  <Input/>
-				</Form.Item>
-
-				<Form.Item
-					name="poll.invalidAnswer"
-					label="Неправильный ответ"
-					required
-				>
-				  <Input/>
-				</Form.Item>
-
 				<Form.Item
 					name="poll.timeIsOver"
 					label="Время вышло"

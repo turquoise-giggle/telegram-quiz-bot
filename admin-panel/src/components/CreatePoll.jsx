@@ -1,11 +1,22 @@
 import React from 'react';
 import '../styles/CreatePoll.css';
-import { Button, Checkbox, Col, Input, InputNumber, message, PageHeader, Radio, Result, Row, Upload } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  Input,
+  InputNumber,
+  message,
+  PageHeader,
+  Radio,
+  Result,
+  Row,
+  Upload
+} from 'antd';
 import { withRouter } from 'react-router';
 import { DeleteFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { uploadFile } from '../api/files';
 import { generateKey } from '../helpers/functions';
-import { createQuiz, postQuiz } from '../api/quizzes';
 import { createPoll } from '../api/polls';
 
 const initialState = {
@@ -25,7 +36,11 @@ const initialState = {
 		text: '',
 		isValid: true
 	  }
-	]
+	],
+	texts: {
+	  validAnswer: 'Правильно ✅',
+	  invalidAnswer: 'Неправильно ❌'
+	}
   },
   showSuccess: false
 };
@@ -46,10 +61,10 @@ class CreatePoll extends React.Component {
   };
 
   onAnswerTimeChanged = time => {
-    const { question } = this.state;
-    question.answerTime = +time;
+	const { question } = this.state;
+	question.answerTime = +time;
 
-    this.setState({ question });
+	this.setState({ question });
   };
 
   onAnswerTimeSwitched = e => {
@@ -57,8 +72,6 @@ class CreatePoll extends React.Component {
 	question.unlimitedAnswerTime = e.target.checked;
 
 	this.setState({ question });
-
-	console.log(this.state);
   };
 
   onAddAnswerClicked = () => {
@@ -104,7 +117,21 @@ class CreatePoll extends React.Component {
 	}
   };
 
+  onNotificationTextChanged = (questionKey, textKey, value) => {
+	const { question } = this.state;
+
+	question.texts[textKey] = value;
+
+	this.setState({ question });
+  };
+
   uploadFile = async ({ file, onSuccess, onError }) => {
+	const sizeLimit = 5e+6;
+
+	if (file.size > sizeLimit) {
+	  return message.error('Максимальный размер 5MB');
+	}
+
 	try {
 	  const imageUrl = await uploadFile(file);
 
@@ -169,6 +196,8 @@ class CreatePoll extends React.Component {
   };
 
   render() {
+    const { question } = this.state;
+
 	return (
 		<div>
 		  <div style={{ display: this.state.showSuccess ? 'none' : 'block' }}>
@@ -186,7 +215,7 @@ class CreatePoll extends React.Component {
 					listType="picture"
 					accept=".png,.jpg,.jpeg"
 					defaultFileList={[]}
-					fileList={this.state.question.fileList}
+					fileList={question.fileList}
 					customRequest={this.uploadFile}
 					onRemove={this.onFileRemove}
 				>
@@ -199,16 +228,18 @@ class CreatePoll extends React.Component {
 				  <label className="formLabel">Время на ответ:</label>
 				  <InputNumber
 					  min={1}
-					  value={this.state.question.answerTime}
+					  value={question.answerTime}
 					  onChange={this.onAnswerTimeChanged}
-					  disabled={this.state.question.unlimitedAnswerTime}
+					  disabled={question.unlimitedAnswerTime}
 					  style={{ width: 60 }}
 				  />
 				  <span style={{ marginLeft: 10 }}>мин.</span>
 				</div>
 
 				<div style={{ marginTop: 15 }}>
-				  <Checkbox checked={this.state.question.unlimitedAnswerTime} onChange={this.onAnswerTimeSwitched}>Неграниченное время ответа</Checkbox>
+				  <Checkbox checked={question.unlimitedAnswerTime} onChange={this.onAnswerTimeSwitched}>
+					Неограниченное время ответа
+				  </Checkbox>
 				</div>
 
 				<div style={{ marginTop: 15 }}>
@@ -224,7 +255,7 @@ class CreatePoll extends React.Component {
 				  <Col span={24}>
 					<Radio.Group style={{ width: '100%', overflow: 'hidden' }}
 								 defaultValue={this.getCorrectAnswer()?.key ?? 0}>
-					  {this.state.question.answers.map(answer => {
+					  {question.answers.map(answer => {
 						return (
 							<div key={answer.key} style={{ marginBottom: 10 }}>
 							  <Radio
@@ -245,6 +276,21 @@ class CreatePoll extends React.Component {
 						);
 					  })}
 					</Radio.Group>
+
+					<div className="NotificationTexts" style={{ marginTop: 10 }}>
+					  <div style={{ marginBottom: 10 }}>
+						<label>После прав. ответа: </label>
+						<Input value={question.texts.validAnswer} onChange={
+						  (e) => this.onNotificationTextChanged(question.key, 'validAnswer', e.target.value)}
+						/>
+					  </div>
+					  <div>
+						<label>После неправ. ответа: </label>
+						<Input value={question.texts.invalidAnswer} onChange={
+						  (e) => this.onNotificationTextChanged(question.key, 'invalidAnswer', e.target.value)}
+						/>
+					  </div>
+					</div>
 				  </Col>
 				</Row>
 				<Row style={{ marginTop: 15 }}>
