@@ -27,6 +27,10 @@ export async function getQuizResultsTable(quizId: string) {
 		
 		const user = await getUserByChatId(userId);
 
+		if (!user) {
+			continue;
+		}
+
 		const username = `@${user.username}` || '-';
 		const name = user.name || '-';
 		
@@ -84,6 +88,10 @@ export async function getPollResultsTableSince(since: number) {
 
 	for (const userId in results) {
 		const user = await getUserByChatId(parseInt(userId));
+
+		if (!user) {
+			continue;
+		}
 
 		const username = `@${user.username}` || '-';
 		const name = user.name || '-';

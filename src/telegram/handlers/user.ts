@@ -55,7 +55,7 @@ const AdminHandlers = {
 
 			const quiz = await getQuizById(quizId);
 
-			const message = quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.validAnswer
+			const message = quiz && quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.validAnswer
 				? quiz.questions[questionCounter].texts.validAnswer
 				: VALID_ANSWER_QUIZ_DEFAULT;
 
@@ -100,7 +100,7 @@ const AdminHandlers = {
 
 			const quiz = await getQuizById(quizId);
 
-			const message = quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.invalidAnswer
+			const message = quiz && quiz.questions[questionCounter] && quiz.questions[questionCounter].texts.invalidAnswer
 				? quiz.questions[questionCounter].texts.invalidAnswer
 				: INVALID_ANSWER_QUIZ_DEFAULT;
 
@@ -130,7 +130,9 @@ const AdminHandlers = {
 			const poll = await getPollById(pollId);
 
 			return ctx.answerCbQuery(
-				poll.texts.validAnswer || VALID_ANSWER_POLL_DEFAULT,
+				poll && poll.texts.validAnswer
+					? poll.texts.validAnswer
+					: VALID_ANSWER_POLL_DEFAULT,
 				true
 			);
 		});
@@ -158,7 +160,9 @@ const AdminHandlers = {
 			const poll = await getPollById(pollId);
 
 			return ctx.answerCbQuery(
-				poll.texts.invalidAnswer || INVALID_ANSWER_POLL_DEFAULT,
+				poll && poll.texts.invalidAnswer
+					? poll.texts.invalidAnswer
+					: INVALID_ANSWER_POLL_DEFAULT,
 				true
 			);
 		});
