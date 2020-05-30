@@ -5,7 +5,7 @@ export function getQuizMessage(
 	for (const question of quiz.questions) {
 		for (const answer of question.answers) {
 			if (answer.isValid) {
-				message += `Правильный ответ: ${answer.text}`;
+				message += `Правильный ответ: ${answer.text}\n`;
 			}
 		}
 	}
