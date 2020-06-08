@@ -10,7 +10,8 @@ import {
 	addPoll,
 	getPolls,
 	updatePoll,
-	deletePoll
+	deletePoll,
+	getStatusTypeTexts
 } from '../../helpers/polls';
 
 const handlers = {
@@ -20,9 +21,10 @@ const handlers = {
 				answerTime,
 				image,
 				answers,
-				texts
+				texts,
+				postTime
 			} = ctx.request.body;
-			if (!image || !answers || !answers.length) {
+			if (!image || !answers || !answers.length || !postTime) {
 				return (ctx.status = 400);
 			}
 			try {
@@ -30,7 +32,8 @@ const handlers = {
 					answerTime,
 					image,
 					answers,
-					texts
+					texts,
+					postTime
 				});
 				ctx.status = 200;
 				ctx.body = {
@@ -44,15 +47,18 @@ const handlers = {
 		read: async (ctx) => {
 			try {
 				const polls = await getPolls();
+				const statuses = getStatusTypeTexts();
 				ctx.status = 200;
 				const body = {
+					statuses,
 					polls: polls.map((poll) => {
 						return {
 							id: poll._id,
 							answerTime: poll.answerTime,
 							image: poll.image,
 							answers: poll.answers,
-							priority: poll.priority
+							postTime: poll.postTime,
+							status: poll.status
 						};
 					})
 				};
@@ -114,35 +120,6 @@ const handlers = {
 
 			try {
 				await postPoll(id);
-				ctx.status = 200;
-			} catch (err) {
-				console.error(err);
-				ctx.status = 500;
-			}
-		}
-	},
-	interval: {
-		read: async (ctx) => {
-			try {
-				const postNewPollInterval = await getVar('postNewPollInterval');
-				ctx.status = 200;
-				ctx.body = {
-					postNewPollInterval: postNewPollInterval.value || null
-				};
-			} catch (err) {
-				console.error(err);
-				ctx.status = 500;
-			}
-		},
-		update: async (ctx) => {
-			const { intervalTime } = ctx.query;
-
-			if (!intervalTime) {
-				return (ctx.status = 400);
-			}
-
-			try {
-				await Daemon.setPostNewPollIntervalTime(intervalTime);
 				ctx.status = 200;
 			} catch (err) {
 				console.error(err);

@@ -33,7 +33,10 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (quizResult && quizResult.lastAnswerTerm === term) {
-				return ctx.answerCbQuery();
+				return ctx.answerCbQuery(
+					await Texts.getText('quiz.alreadyAnswered'),
+					true
+				);
 			}
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
@@ -78,7 +81,10 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (quizResult && quizResult.lastAnswerTerm === term) {
-				return ctx.answerCbQuery();
+				return ctx.answerCbQuery(
+					await Texts.getText('quiz.alreadyAnswered'),
+					true
+				);
 			}
 			// User has already failed this quiz
 			if (quizResult && !quizResult.success) {
@@ -121,7 +127,10 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (pollResult) {
-				return ctx.answerCbQuery();
+				return ctx.answerCbQuery(
+					await Texts.getText('poll.alreadyAnswered'),
+					true
+				);
 			}
 
 			// Set success to true
@@ -151,7 +160,10 @@ const AdminHandlers = {
 
 			// User has already answered this question
 			if (pollResult) {
-				return ctx.answerCbQuery();
+				return ctx.answerCbQuery(
+					await Texts.getText('poll.alreadyAnswered'),
+					true
+				);
 			}
 
 			// Set success to true

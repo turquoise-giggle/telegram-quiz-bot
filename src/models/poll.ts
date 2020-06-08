@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import PollStatusType from '../enums/PollStatusType';
 import {
 	VALID_ANSWER_POLL_DEFAULT,
 	INVALID_ANSWER_POLL_DEFAULT
@@ -17,7 +18,8 @@ export interface IPoll {
 		validAnswer: string;
 		invalidAnswer: string;
 	};
-	priority?: number;
+	postTime: number;
+	status?: PollStatusType;
 }
 
 export interface IMongoosePoll extends IPoll, Document {}
@@ -43,7 +45,8 @@ export const PollSchema: Schema = new Schema({
 			invalidAnswer: { type: String, required: true, default: () => INVALID_ANSWER_POLL_DEFAULT }
 		}
 	},
-	priority: { type: Number }
+	postTime: { type: Number, required: true },
+	status: { type: Number, default: () => PollStatusType.WAITING }
 });
 
 const PollModel = mongoose.model<IMongoosePoll>('Poll', PollSchema);

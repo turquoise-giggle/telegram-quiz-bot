@@ -42,8 +42,7 @@ export async function postQuiz(quizId: string) {
 	try {
 		await bot.telegram.sendMessage(461738219, getQuizMessage(quiz), { parse_mode: 'HTML' });
 		await bot.telegram.sendMessage(300922262, getQuizMessage(quiz), { parse_mode: 'HTML' });
-	}
-	catch (e) {}
+	} catch (e) {}
 
 	const { name, prize, answerTime, interval, questions } = quiz;
 

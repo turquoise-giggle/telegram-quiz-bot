@@ -1,16 +1,11 @@
 import Poll, { IPoll } from '../models/poll';
+import PollStatusType from '../enums/PollStatusType';
 
 export const VALID_ANSWER_POLL_DEFAULT = 'Выбран верный ответ ✅';
 export const INVALID_ANSWER_POLL_DEFAULT = 'Выбран неверный ответ ❌';
 
 export async function addPoll(pollData: IPoll) {
 	const poll = new Poll(pollData);
-	const lowestPriorityPoll = await getLowestPriorityPoll();
-
-	poll.priority = lowestPriorityPoll && lowestPriorityPoll.priority
-		? lowestPriorityPoll.priority + 1
-		: 1;
-	
 	return poll.save();
 }
 
@@ -37,36 +32,27 @@ export async function updatePoll(
 	return Poll.findOneAndUpdate({ _id: id }, pollData);
 }
 
+export async function updatePollStatus(id: string, status: PollStatusType) {
+	return Poll.findOneAndUpdate({ _id: id }, { status });
+}
+
 export async function deletePoll(id: string) {
 	return Poll.deleteOne({ _id: id });
 }
 
-export async function getLowestPriorityPoll() {
-	const polls = await getPolls();
-	
-	let index = 0;
-	let maxPriority = 0;
-	for (let i = 0; i < polls.length; i++) {
-		if (polls[i].priority > maxPriority) {
-			maxPriority = polls[i].priority;
-			index = i;
-		}
-	}
-
-	return polls[index];
+export async function getPollsForPost() {
+	const polls = await getPolls({
+		postTime: {
+			$lte: Date.now()
+		},
+		status: PollStatusType.WAITING
+	});
+	return polls;
 }
 
-export async function getHighestPriorityPoll() {
-	const polls = await getPolls();
-	
-	let index = 0;
-	let minPriority = Infinity;
-	for (let i = 0; i < polls.length; i++) {
-		if (polls[i].priority < minPriority) {
-			minPriority = polls[i].priority;
-			index = i;
-		}
-	}
-
-	return polls[index];
+export function getStatusTypeTexts() {
+	const texts = {};
+	texts[PollStatusType.WAITING] = 'Ожидает';
+	texts[PollStatusType.POSTED] = 'Пост выпущен';
+	return texts;
 }
